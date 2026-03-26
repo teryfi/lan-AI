@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { BarChart3, Bot, CircleDollarSign, MessageCircle, ShoppingBag, Sparkles } from "lucide-react";
 import { useApp } from "@/components/AuthProvider";
 import { Reveal } from "@/components/Reveal";
 import { AuthSceneCarousel } from "@/components/AuthSceneCarousel";
@@ -9,6 +10,38 @@ import { AuthSceneCarousel } from "@/components/AuthSceneCarousel";
 export function HomePage() {
   const router = useRouter();
   const { user, setAuthOpen, featuredCapsules } = useApp();
+  const featureCards = [
+    {
+      icon: Bot,
+      title: "ИИ-подборщик",
+      text: "Персональные капсулы на основе роста, фигуры, сезона, палитры и бюджета.",
+    },
+    {
+      icon: BarChart3,
+      title: "Аналитика продаж",
+      text: "Дизайнеры видят просмотры, клики, сохранения и реальные сигналы спроса.",
+    },
+    {
+      icon: Sparkles,
+      title: "Социальная лента",
+      text: "Лайки, комментарии, подписки и охваты работают как fashion-сообщество.",
+    },
+    {
+      icon: MessageCircle,
+      title: "Прямой чат",
+      text: "Клиент может сразу связаться с дизайнером, уточнить детали и договориться о покупке.",
+    },
+    {
+      icon: CircleDollarSign,
+      title: "Быстрый заказ",
+      text: "От понравившейся вещи до заявки и покупки без длинного пути и посредников.",
+    },
+    {
+      icon: ShoppingBag,
+      title: "Конструктор капсул",
+      text: "Образ собирается по ролям: верх, низ, верхний слой, обувь и акцент.",
+    },
+  ];
 
   if (!user.authenticated) {
     return (
@@ -84,7 +117,7 @@ export function HomePage() {
       </Reveal>
 
       <Reveal delay={120}>
-        <section className="steps-section">
+        <section className="steps-section customer-journey">
           <div className="steps-head">
             <div className="steps-intro">
               <h2>Четыре этапа от публикации вещи до связи с дизайнером.</h2>
@@ -98,7 +131,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="steps-line">
+          <div className="steps-line journey-line">
             <article className="step-item">
               <div className="step-marker">01</div>
               <h3>Публикация вещи</h3>
@@ -124,7 +157,7 @@ export function HomePage() {
       </Reveal>
 
       <Reveal delay={160}>
-        <section className="steps-section designer-steps-section">
+        <section className="steps-section designer-steps-section designer-journey">
           <div className="steps-head">
             <div className="steps-intro">
               <h2>Четыре этапа до первой продажи на платформе.</h2>
@@ -138,7 +171,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="steps-line">
+          <div className="steps-line journey-line">
             <article className="step-item">
               <div className="step-marker">01</div>
               <h3>Оформить профиль</h3>
@@ -193,6 +226,75 @@ export function HomePage() {
                 </div>
               </article>
             ))}
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal delay={240}>
+        <section className="home-dark-block">
+          <div className="home-dark-head">
+            <h2>Все в одном месте</h2>
+            <p>
+              Платформа соединяет AI-подбор, ленту, покупку, чат и аналитику в одном сценарии, чтобы и клиент, и
+              дизайнер двигались по понятному маршруту.
+            </p>
+          </div>
+
+          <div className="home-dark-grid">
+            {featureCards.map(({ icon: Icon, title, text }, index) => (
+              <article className="home-dark-card" key={title} style={{ "--delay": `${index * 70}ms` }}>
+                <div className="home-dark-icon">
+                  <Icon size={20} strokeWidth={1.9} />
+                </div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal delay={280}>
+        <section className="home-dark-cta">
+          <div className="home-dark-cta-inner">
+            <h2>
+              Начни находить
+              <span> свой стиль</span>
+            </h2>
+            <p>
+              Более 1 200 дизайнеров уже в выдаче. Можно собрать капсулу, написать автору напрямую и сразу перейти к
+              покупке без лишних шагов.
+            </p>
+
+            <div className="home-dark-actions">
+              <Link className="home-dark-primary" href="/ai">
+                Подобрать гардероб бесплатно
+              </Link>
+              <button className="home-dark-secondary" onClick={() => setAuthOpen(true)}>
+                Зарегистрироваться как дизайнер
+              </button>
+            </div>
+          </div>
+
+          <div className="home-dark-footer">
+            <div className="home-dark-brand">
+              <span className="home-dark-brand-mark">Л</span>
+              <strong>Лань AI</strong>
+            </div>
+
+            <p>© 2026 Лань AI. Платформа для дизайнеров одежды.</p>
+
+            <div className="home-dark-links">
+              <button type="button" onClick={() => router.push("/feed")}>
+                Лента
+              </button>
+              <button type="button" onClick={() => router.push("/ai")}>
+                AI-конструктор
+              </button>
+              <button type="button" onClick={() => router.push("/profile")}>
+                Профиль
+              </button>
+            </div>
           </div>
         </section>
       </Reveal>
