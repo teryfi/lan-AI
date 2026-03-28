@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { catalog, featuredCapsules, initialDesignerCapsules, initialMessages } from "@/lib/data";
+import { initialConversations } from "@/lib/messages-data";
 
 const AppContext = createContext(null);
 
@@ -21,7 +22,7 @@ export function AuthProvider({ children }) {
   const [savedCapsules, setSavedCapsules] = useState([]);
   const [savedItems, setSavedItems] = useState([]);
   const [designerCapsules, setDesignerCapsules] = useState(initialDesignerCapsules);
-  const [designerMessages, setDesignerMessages] = useState(initialMessages);
+  const [designerConversations, setDesignerConversations] = useState(initialConversations);
   const [assistantMessages, setAssistantMessages] = useState([
     { role: "assistant", text: "Я стилист-помощник. Могу помочь собрать лук, подсказать замену вещи, подобрать обувь, палитру и объяснить, почему капсула работает." }
   ]);
@@ -164,8 +165,27 @@ export function AuthProvider({ children }) {
     ]);
   };
 
-  const sendDesignerMessage = (text) => {
-    setDesignerMessages((prev) => [...prev, { role: "designer", text }]);
+  const sendDesignerMessage = (conversationId, text) => {
+    setDesignerConversations((prev) =>
+      prev.map((conversation) => {
+        if (conversation.id !== conversationId) {
+          return conversation;
+        }
+
+        const trimmed = text.trim();
+        if (!trimmed) {
+          return conversation;
+        }
+
+        return {
+          ...conversation,
+          preview: trimmed,
+          timeLabel: "Сейчас",
+          unreadCount: 0,
+          messages: [...conversation.messages, { role: "designer", text: trimmed, time: "Сейчас" }]
+        };
+      })
+    );
   };
 
   const askAssistant = (text) => {
@@ -222,7 +242,8 @@ export function AuthProvider({ children }) {
     toggleSave,
     designerCapsules,
     createDesignerCapsule,
-    designerMessages,
+    designerConversations,
+    designerMessages: designerConversations[0]?.messages || initialMessages,
     sendDesignerMessage,
     assistantMessages,
     askAssistant,

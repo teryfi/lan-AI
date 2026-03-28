@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { useApp } from "@/components/AuthProvider";
+import { MessagesExperience } from "@/components/MessagesExperience";
 import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 
 const designerTabs = [
@@ -429,7 +430,9 @@ export function ProfilePage() {
     </section>
   );
 
-  const renderMessages = () => (
+  const renderMessages = () => <MessagesExperience mode="panel" />;
+
+  const renderMessagesLegacy = () => (
     <section className="profile-content-panel">
       <div className="profile-content-head">
         <div>
