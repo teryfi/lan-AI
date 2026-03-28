@@ -14,21 +14,39 @@ export function SiteHeader() {
 
   useEffect(() => {
     let lastY = window.scrollY;
+    let frameId = 0;
+    let scheduled = false;
 
-    const onScroll = () => {
+    const updateVisibility = () => {
       const currentY = window.scrollY;
+      let nextHidden = false;
+
       if (currentY < 40) {
-        setIsHidden(false);
+        nextHidden = false;
       } else if (currentY > lastY && currentY > 120) {
-        setIsHidden(true);
+        nextHidden = true;
       } else if (currentY < lastY) {
-        setIsHidden(false);
+        nextHidden = false;
       }
+
+      setIsHidden((prev) => (prev === nextHidden ? prev : nextHidden));
       lastY = currentY;
     };
 
+    const onScroll = () => {
+      if (scheduled) return;
+      scheduled = true;
+      frameId = window.requestAnimationFrame(() => {
+        scheduled = false;
+        updateVisibility();
+      });
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   if (isAuthLanding) {

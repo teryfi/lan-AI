@@ -14,91 +14,12 @@ const defaultUser = {
   authenticated: false
 };
 
-function normalizeStyle(style) {
-  const lower = style.toLowerCase();
-  if (lower.includes("миним")) return "minimal";
-  if (lower.includes("класс")) return "classic";
-  if (lower.includes("стрит") || lower.includes("улич")) return "street";
-  if (lower.includes("кэжуал") || lower.includes("повсед")) return "casual";
-  if (lower.includes("романт")) return "romantic";
-  if (lower.includes("minimal")) return "minimal";
-  if (lower.includes("classic")) return "classic";
-  if (lower.includes("street")) return "street";
-  if (lower.includes("casual")) return "casual";
-  if (lower.includes("romantic")) return "romantic";
-  return "minimal";
-}
-
-function scoreContext(item, profile) {
-  const haystack = `${item.title} ${item.description} ${item.styles.join(" ")} ${item.categoryLabel}`.toLowerCase();
-  let score = 0;
-
-  if (profile.season === "лето" && /топ|футбол|блуз|мюл|балет|платье/.test(haystack)) score += 10;
-  if (profile.season === "осень" && /тренч|пальто|ботин|шарф|жакет/.test(haystack)) score += 10;
-  if (profile.season === "весна" && /тренч|рубаш|лофер|жакет|юбк/.test(haystack)) score += 10;
-  if (profile.season === "зима" && /пальто|джемпер|шарф|ботин/.test(haystack)) score += 10;
-
-  if (profile.occasion === "офис" && /брюк|рубаш|жакет|лофер|пальто/.test(haystack)) score += 12;
-  if (profile.occasion === "город" && /футбол|джинс|бомбер|кед|сумк/.test(haystack)) score += 12;
-  if (profile.occasion === "свидание" && /юбк|плать|блуз|серьг|мюл/.test(haystack)) score += 12;
-  if (profile.occasion === "вечер" && /плать|серьг|балет|мюл|жакет/.test(haystack)) score += 12;
-  if (profile.occasion === "путешествие" && /кед|джинс|футбол|бомбер|сумк/.test(haystack)) score += 12;
-
-  if (profile.palette === "тёплая нейтральная" && /camel|sand|milk|oat|beige|ivory|cream/.test(haystack)) score += 8;
-  if (profile.palette === "холодная нейтральная" && /graphite|silver|smoke|soft blue|indigo/.test(haystack)) score += 8;
-  if (profile.palette === "монохром" && /black|graphite|ivory|milk|white/.test(haystack)) score += 8;
-  if (profile.palette === "контрастная" && /plum|olive|amber|red/.test(haystack)) score += 8;
-
-  if (profile.bodyType === "песочные часы" && /платье|ремень|юбк|брюк|блуз/.test(haystack)) score += 6;
-  if (profile.bodyType === "прямоугольник" && /жакет|бомбер|юбк|сумк|серьг/.test(haystack)) score += 6;
-  if (profile.bodyType === "груша" && /жакет|блуз|рубаш|пальто|серьг/.test(haystack)) score += 6;
-  if (profile.bodyType === "перевёрнутый треугольник" && /брюк|юбк|джинс|сумк/.test(haystack)) score += 6;
-  if (profile.bodyType === "яблоко" && /пальто|жакет|платье|брюк/.test(haystack)) score += 6;
-
-  return score;
-}
-
-function scoreCapsule(products, profile) {
-  const query = `${profile.style} ${profile.season} ${profile.palette} ${profile.prompt} ${profile.occasion} ${profile.bodyType}`.toLowerCase();
-  const ranked = products
-    .filter((item) => item.price <= profile.budget)
-    .map((item) => {
-      const haystack = `${item.title} ${item.description} ${item.styles.join(" ")} ${item.categoryLabel}`.toLowerCase();
-      const matchScore = query.split(/\s+/).reduce((sum, token) => token.length < 3 ? sum : sum + (haystack.includes(token) ? 10 : 0), 40);
-      const budgetScore = Math.max(0, 22 - Math.round(item.price / profile.budget * 18));
-      const styleScore = item.styles.includes(normalizeStyle(profile.style)) ? 18 : 6;
-      const contextScore = scoreContext(item, profile);
-      return { ...item, match: Math.min(98, matchScore + budgetScore + styleScore + contextScore) };
-    })
-    .sort((a, b) => b.match - a.match);
-
-  const desired = ["tops", "bottoms", "outerwear", "shoes", "accessories"];
-  const capsule = [];
-  let total = 0;
-
-  desired.forEach((category) => {
-    const found = ranked.find((item) => item.category === category && !capsule.some((selected) => selected.id === item.id));
-    if (found && total + found.price <= profile.budget) {
-      capsule.push(found);
-      total += found.price;
-    }
-  });
-
-  if (!capsule.some((item) => item.category === "tops")) {
-    const dress = ranked.find((item) => item.category === "dresses");
-    if (dress && total + dress.price <= profile.budget) capsule.push(dress);
-  }
-
-  return capsule.length ? capsule : ranked.slice(0, 4);
-}
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(defaultUser);
   const [authOpen, setAuthOpen] = useState(false);
   const [products, setProducts] = useState(catalog);
   const [savedCapsules, setSavedCapsules] = useState([]);
   const [savedItems, setSavedItems] = useState([]);
-  const [currentCapsule, setCurrentCapsule] = useState([]);
   const [designerCapsules, setDesignerCapsules] = useState(initialDesignerCapsules);
   const [designerMessages, setDesignerMessages] = useState(initialMessages);
   const [assistantMessages, setAssistantMessages] = useState([
@@ -107,7 +28,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const raw = window.localStorage.getItem("lan-ai-user");
-    if (raw) setUser(JSON.parse(raw));
+    if (!raw) return;
+
+    try {
+      setUser(JSON.parse(raw));
+    } catch {
+      window.localStorage.removeItem("lan-ai-user");
+    }
   }, []);
 
   useEffect(() => {
@@ -139,7 +66,6 @@ export function AuthProvider({ children }) {
     setUser(defaultUser);
     setSavedCapsules([]);
     setSavedItems([]);
-    setCurrentCapsule([]);
   };
 
   const updateUser = (payload) => {
@@ -151,15 +77,6 @@ export function AuthProvider({ children }) {
     }));
   };
 
-  const saveCapsule = () => {
-    if (!currentCapsule.length) return false;
-    const total = currentCapsule.reduce((sum, item) => sum + item.price, 0);
-    setSavedCapsules((prev) => [
-      { id: Date.now(), name: `Capsule ${prev.length + 1}`, items: currentCapsule.length, total },
-      ...prev
-    ]);
-    return true;
-  };
 
   const addCapsule = (capsule) => {
     const total = capsule.items.reduce((sum, item) => sum + item.price, 0);
@@ -240,11 +157,6 @@ export function AuthProvider({ children }) {
     setAssistantMessages((prev) => [...prev, { role: "user", text }, { role: "assistant", text: answer }]);
   };
 
-  const buildCapsule = (profile) => {
-    const capsule = scoreCapsule(products, profile);
-    setCurrentCapsule(capsule);
-    return capsule;
-  };
 
   const value = {
     user,
@@ -257,9 +169,6 @@ export function AuthProvider({ children }) {
     featuredCapsules,
     savedCapsules,
     savedItems,
-    currentCapsule,
-    buildCapsule,
-    saveCapsule,
     addCapsule,
     toggleSave,
     designerCapsules,

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { BarChart3, Bot, CircleDollarSign, MessageCircle, ShoppingBag, Sparkles } from "lucide-react";
 import { useApp } from "@/components/AuthProvider";
 import { Reveal } from "@/components/Reveal";
-import { AuthSceneCarousel } from "@/components/AuthSceneCarousel";
 import { PremiumHero } from "@/components/PremiumHero";
 
 export function HomePage() {
@@ -48,67 +47,54 @@ export function HomePage() {
     return <PremiumHero onStart={() => setAuthOpen(true)} authModalOpen={authOpen} />;
   }
 
-  if (!user.authenticated) {
-    return (
-      <section className="auth-landing auth-landing-minimal">
-        <div className="auth-landing-copy auth-landing-copy-centered">
-          <h1 className="auth-headline">
-            <span className="auth-headline-line">Дизайнеры становятся заметнее.</span>
-            <span className="auth-headline-line">Пользователи собирают</span>
-            <span className="auth-headline-line accent">лук, а не хаос из вещей.</span>
-          </h1>
-
-          <p className="hero-text auth-subtitle">
-            Лента, AI-подбор и прямой контакт с дизайнером собраны в одном сценарии, чтобы вещь можно было найти, примерить в капсуле и сразу обсудить покупку.
-          </p>
-
-          <AuthSceneCarousel />
-
-          <div className="center-cta">
-            <button className="primary-btn hero-cta" onClick={() => setAuthOpen(true)}>
-              Начать работу
-            </button>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <div className="page-grid">
       <Reveal>
-        <section className="hero-grid hero-grid-balanced">
-          <div className="hero-copy hero-copy-wide">
-            <h1>Находи вещи дизайнеров, которые складываются в цельный образ.</h1>
-            <p className="hero-text hero-text-left">
-              Лента, AI-подбор и прямой контакт с дизайнером собраны в одном интерфейсе, чтобы ты быстрее находил нужный лук и мог сразу перейти к покупке.
-            </p>
-            <div className="hero-actions">
-              <Link className="primary-btn" href="/feed">
-                Смотреть ленту
-              </Link>
-              <Link className="ghost-btn" href="/ai">
-                Собрать капсулу
-              </Link>
+        <section className="hero-section">
+          <div className="hero-layout-container">
+            <div className="hero-grid hero-grid-balanced">
+              <div className="hero-copy hero-copy-wide">
+                <h1>Находи вещи дизайнеров, которые складываются в цельный образ.</h1>
+                <p className="hero-text hero-text-left">
+                  Лента, AI-подбор и прямой контакт с дизайнером собраны в одном интерфейсе, чтобы ты быстрее находил нужный лук и мог сразу перейти к покупке.
+                </p>
+                <div className="hero-actions">
+                  <Link className="primary-btn" href="/feed">
+                    Смотреть ленту
+                  </Link>
+                  <Link className="ghost-btn" href="/ai">
+                    Собрать капсулу
+                  </Link>
+                </div>
+              </div>
+
+              <article className="hero-editorial-card hero-editorial-card-compact">
+                <div className="hero-editorial-image" aria-hidden="true">
+                  <div className="hero-capsule-grid">
+                    <div className="hero-capsule-tile hero-capsule-tile-1"></div>
+                    <div className="hero-capsule-tile hero-capsule-tile-2"></div>
+                    <div className="hero-capsule-tile hero-capsule-tile-3"></div>
+                    <div className="hero-capsule-tile hero-capsule-tile-4"></div>
+                    <div className="hero-capsule-tile hero-capsule-tile-5"></div>
+                  </div>
+                </div>
+                <div className="hero-editorial-copy">
+                  <span className="status-badge">AI Match 96%</span>
+                  <h2>Soft City Capsule</h2>
+                  <p>Собрана под городской ритм, мягкую палитру и бюджет до 30 000 ₽.</p>
+                </div>
+              </article>
             </div>
           </div>
-
-          <article className="hero-editorial-card hero-editorial-card-compact">
-            <div className="hero-editorial-image"></div>
-            <div className="hero-editorial-copy">
-              <span className="status-badge">AI Match 96%</span>
-              <h2>Soft City Capsule</h2>
-              <p>Собрана под городской ритм, мягкую палитру и бюджет до 30 000 ₽.</p>
-            </div>
-          </article>
         </section>
       </Reveal>
 
       <Reveal delay={80}>
         <section className="curation-strip">
           <article className="curation-item">
-            <span>120+</span>
-            <p>брендов и fashion-авторов уже в выдаче</p>
+            <span>Прямой чат</span>
+            <p>покупатель может быстро написать дизайнеру и обсудить вещь без долгого пути</p>
           </article>
           <article className="curation-item">
             <span>5 ролей</span>
@@ -116,7 +102,7 @@ export function HomePage() {
           </article>
           <article className="curation-item">
             <span>AI first</span>
-            <p>поиск учитывает стиль, сезон, ограничения и бюджет без лишнего шума</p>
+            <p>поиск учитывает стиль, сезон, ограничения и бюджет</p>
           </article>
         </section>
       </Reveal>
@@ -125,22 +111,19 @@ export function HomePage() {
         <section className="steps-section customer-journey">
           <div className="steps-head">
             <div className="steps-intro">
-              <h2>Четыре этапа от публикации вещи до связи с дизайнером.</h2>
-              <p className="section-intro">
-                Весь путь собран в одну понятную схему: вещь попадает в систему, пользователь задаёт параметры, AI собирает комплект и дальше можно сразу выйти на покупку.
-              </p>
+              <h2>Четыре этапа от регистрации до связи с дизайнером.</h2>
             </div>
             <div className="steps-note">
               <strong>После подбора пользователь не теряется в интерфейсе</strong>
-              <p>Из капсулы можно перейти к дизайнеру, задать вопрос, обсудить детали и оформить покупку понравившейся вещи.</p>
+              <p>Из капсулы можно перейти к дизайнеру, задать вопрос и обсудить детали понравившейся вещи.</p>
             </div>
           </div>
 
           <div className="steps-line journey-line">
             <article className="step-item">
               <div className="step-marker">01</div>
-              <h3>Публикация вещи</h3>
-              <p>Дизайнер добавляет вещь как продукт с фото, описанием, категорией и ценой.</p>
+              <h3>Регистрация</h3>
+              <p>Пользователь создаёт аккаунт, чтобы открыть AI-подбор, сохранять капсулы и связываться с дизайнерами.</p>
             </article>
             <article className="step-item">
               <div className="step-marker">02</div>
@@ -154,8 +137,8 @@ export function HomePage() {
             </article>
             <article className="step-item">
               <div className="step-marker">04</div>
-              <h3>Связь и покупка</h3>
-              <p>Пользователь открывает профиль дизайнера, пишет ему в чат и переходит к покупке выбранной вещи.</p>
+              <h3>Связь с дизайнером</h3>
+              <p>Пользователь открывает профиль дизайнера, пишет ему в чат и уточняет детали по выбранной вещи.</p>
             </article>
           </div>
         </section>
@@ -166,9 +149,6 @@ export function HomePage() {
           <div className="steps-head">
             <div className="steps-intro">
               <h2>Четыре этапа до первой продажи на платформе.</h2>
-              <p className="section-intro">
-                Для дизайнера путь тоже собран ясно: оформить профиль, опубликовать вещи, попасть в рекомендации и получить первый прямой запрос от аудитории.
-              </p>
             </div>
             <div className="steps-note">
               <strong>Платформа ведёт от публикации к реальному спросу</strong>
@@ -189,8 +169,8 @@ export function HomePage() {
             </article>
             <article className="step-item">
               <div className="step-marker">03</div>
-              <h3>Попасть в рекомендации</h3>
-              <p>Платформа показывает вещи в ленте и AI-капсулах тем пользователям, которым они действительно подходят.</p>
+              <h3>Капсулы и рекомендации</h3>
+              <p>Дизайнер может собирать капсулы из своих вещей, а пользователи увидят их в ленте и AI-подборках, когда они подходят по стилю и параметрам.</p>
             </article>
             <article className="step-item">
               <div className="step-marker">04</div>
@@ -206,22 +186,28 @@ export function HomePage() {
           <div className="section-head compact-head">
             <div className="story-lead">
               <h2>Готовые капсулы от дизайнеров</h2>
+            </div>
+            <div className="story-summary steps-note">
+              <strong>Готовые капсулы как старт для подбора</strong>
               <p className="section-intro">
                 Эти подборки уже собраны как законченные решения. Их можно открыть, изучить и использовать как старт для собственного AI-поиска.
               </p>
             </div>
-
-            <button className="text-link" onClick={() => router.push("/feed")}>
-              Открыть всю ленту
-            </button>
           </div>
 
           <div className="featured-grid">
             {featuredCapsules.map((capsule) => (
               <article className="featured-card" key={capsule.id}>
-                <div className="featured-image" style={{ "--preview": `url(${capsule.image})` }}></div>
+                <div className="featured-capsule-preview" aria-hidden="true">
+                  {(capsule.previewImages || [capsule.image]).slice(0, 5).map((image, index) => (
+                    <div
+                      key={`${capsule.id}-${index}`}
+                      className={`featured-capsule-tile featured-capsule-tile-${index + 1}`}
+                      style={{ "--preview": `url(${image})` }}
+                    ></div>
+                  ))}
+                </div>
                 <div className="featured-content">
-                  <p className="featured-label">Capsule edit</p>
                   <h3>{capsule.name}</h3>
                   <p className="muted-text">{capsule.designer}</p>
                   <div className="featured-meta">
@@ -275,9 +261,6 @@ export function HomePage() {
               <Link className="home-dark-primary" href="/ai">
                 Подобрать гардероб бесплатно
               </Link>
-              <button className="home-dark-secondary" onClick={() => setAuthOpen(true)}>
-                Зарегистрироваться как дизайнер
-              </button>
             </div>
           </div>
 

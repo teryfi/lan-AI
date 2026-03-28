@@ -56,14 +56,16 @@ export function AIPage() {
     });
   }, [filters, products]);
 
+  const productById = useMemo(() => new Map(products.map((item) => [item.id, item])), [products]);
+
   const resultCapsules = useMemo(() => {
     return referenceCapsuleResults.map((capsule) => ({
       ...capsule,
       items: capsule.itemIds
-        .map((id) => products.find((item) => item.id === id))
+        .map((id) => productById.get(id))
         .filter(Boolean)
     }));
-  }, [products]);
+  }, [productById]);
 
   const capsuleTotal = capsuleItems.reduce((sum, item) => sum + item.price, 0);
 

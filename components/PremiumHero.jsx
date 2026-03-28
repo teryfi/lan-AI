@@ -11,7 +11,7 @@ const HERO_WORDS = [
 
 const AUTO_ROTATE_MS = 4600;
 const HERO_DESCRIPTION =
-  "Платформа для тех, кто хочет быстрее находить сильные вещи, собирать капсулы и сразу переходить к покупке или публикации.";
+  "Покупатели быстрее находят сильные вещи и собирают капсулы, а дизайнеры публикуют коллекции, попадают в рекомендации и получают прямые заявки.";
 
 export function PremiumHero({ onStart, authModalOpen = false }) {
   const [activeIndex, setActiveIndex] = useState(1);
