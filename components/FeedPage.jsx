@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useApp } from "@/components/AuthProvider";
+import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 import { Reveal } from "@/components/Reveal";
 
 const heights = [280, 240, 320, 260, 300];
@@ -83,7 +84,14 @@ export function FeedPage() {
 
             <div className="feed-grid">
               {items.map((item, index) => (
-                <article className="feed-card" key={item.id}>
+                <EntityCardLink
+                  as="article"
+                  className="feed-card"
+                  key={item.id}
+                  entity={item}
+                  entityType="item"
+                  ariaLabel={`Открыть вещь ${item.title}`}
+                >
                   <div
                     className="feed-image"
                     style={{
@@ -105,7 +113,7 @@ export function FeedPage() {
                       </Link>
                     </div>
                   </div>
-                </article>
+                </EntityCardLink>
               ))}
             </div>
           </div>

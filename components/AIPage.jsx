@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   Check,
@@ -13,9 +14,11 @@ import {
   X
 } from "lucide-react";
 import { useApp } from "@/components/AuthProvider";
+import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 import { referenceCapsuleResults } from "@/lib/referenceData";
 
 export function AIPage() {
+  const searchParams = useSearchParams();
   const {
     user,
     setAuthOpen,
@@ -68,6 +71,13 @@ export function AIPage() {
   }, [productById]);
 
   const capsuleTotal = capsuleItems.reduce((sum, item) => sum + item.price, 0);
+
+  useEffect(() => {
+    const assistantPrompt = searchParams.get("assistantPrompt");
+    if (!assistantPrompt) return;
+
+    setAssistantInput((currentValue) => currentValue || assistantPrompt);
+  }, [searchParams]);
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -250,8 +260,12 @@ export function AIPage() {
 
           <div className="reference-ai-capsules">
             {resultCapsules.map((capsule, index) => (
-              <motion.article
+              <EntityCardLink
+                as={motion.article}
                 key={capsule.id}
+                entity={capsule}
+                entityType="capsule"
+                ariaLabel={`Открыть капсулу ${capsule.name}`}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: index * 0.1 }}
@@ -280,7 +294,7 @@ export function AIPage() {
                     <button onClick={() => capsule.items.forEach(addToCapsule)}>В конструктор</button>
                   </div>
                 </div>
-              </motion.article>
+              </EntityCardLink>
             ))}
           </div>
 
@@ -293,8 +307,12 @@ export function AIPage() {
             {filteredProducts.map((item, index) => {
               const selected = capsuleItems.some((entry) => entry.id === item.id);
               return (
-                <motion.article
+                <EntityCardLink
+                  as={motion.article}
                   key={item.id}
+                  entity={item}
+                  entityType="item"
+                  ariaLabel={`Открыть вещь ${item.title}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.04 }}
@@ -317,18 +335,22 @@ export function AIPage() {
                       </button>
                     </div>
                   </div>
-                </motion.article>
+                </EntityCardLink>
               );
             })}
           </div>
         </div>
       ) : null}
 
-      <section className="reference-assistant-panel">
+      <section className="reference-assistant-panel" id="assistant-panel">
         <div className="reference-ai-section-head">
           <h2>AI-помощник по стилю</h2>
           <span>Только на русском</span>
         </div>
+
+        {searchParams.get("assistantItemTitle") ? (
+          <div className="assistant-context-chip">Контекст: {searchParams.get("assistantItemTitle")}</div>
+        ) : null}
 
         <div className="reference-assistant-messages">
           {assistantMessages.map((message, index) => (

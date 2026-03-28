@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   Bell,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { useApp } from "@/components/AuthProvider";
+import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 
 const designerTabs = [
   { id: "analytics", label: "Аналитика", icon: Layers3 },
@@ -34,6 +35,8 @@ const clientTabs = [
   { id: "history", label: "История", icon: History },
   { id: "settings", label: "Настройки", icon: Settings }
 ];
+
+clientTabs.splice(2, 0, { id: "messages", label: "Сообщения", icon: MessageCircle });
 
 const categoryLabels = {
   outerwear: "Верхний слой",
@@ -57,6 +60,7 @@ function getStatusClass(status) {
 
 export function ProfilePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     user,
     metrics,
@@ -95,6 +99,34 @@ export function ProfilePage() {
     description: "",
     image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80"
   });
+
+  const contactContext = useMemo(() => {
+    const contextTitle = searchParams.get("contextTitle");
+    if (!contextTitle) return null;
+
+    return {
+      designer: searchParams.get("designer"),
+      type: searchParams.get("contextType"),
+      title: contextTitle
+    };
+  }, [searchParams]);
+
+  useEffect(() => {
+    const requestedTab = searchParams.get("tab");
+    if (requestedTab && tabs.some((tab) => tab.id === requestedTab)) {
+      setActiveTab(requestedTab);
+    }
+  }, [searchParams, tabs]);
+
+  useEffect(() => {
+    if (!contactContext || message.trim()) return;
+
+    const prefix = contactContext.type === "capsule"
+      ? "Здравствуйте, хочу обсудить капсулу"
+      : "Здравствуйте, хочу уточнить детали по вещи";
+
+    setMessage(`${prefix} «${contactContext.title}».`);
+  }, [contactContext, message]);
 
   const requests = useMemo(
     () => [
@@ -399,6 +431,12 @@ export function ProfilePage() {
           <p>Обсуждение деталей заказа, капсулы и покупки вещи напрямую с клиентом.</p>
         </div>
       </div>
+      {contactContext ? (
+        <div className="message-context-card">
+          <strong>{contactContext.type === "capsule" ? "Контекст: капсула" : "Контекст: вещь"}</strong>
+          <span>{contactContext.title}</span>
+        </div>
+      ) : null}
       <div className="chat-box tall">
         {designerMessages.map((item, index) => (
           <div className={`message-bubble ${item.role === "designer" ? "self" : ""}`} key={`${item.role}-${index}`}>
@@ -481,14 +519,21 @@ export function ProfilePage() {
       </div>
       <div className="profile-card-grid">
         {designerCapsules.map((item) => (
-          <article className="profile-content-card capsule-preview-card" key={item.id}>
+          <EntityCardLink
+            as="article"
+            className="profile-content-card capsule-preview-card"
+            key={item.id}
+            entity={item}
+            entityType="capsule"
+            ariaLabel={`Открыть капсулу ${item.name}`}
+          >
             <div className="capsule-preview-card-head">
               <span className="capsule-preview-pill">Готовая капсула</span>
               <strong>{formatCurrency(item.budget)}</strong>
             </div>
             <h3>{item.name}</h3>
             <p>{item.items} вещей в подборке. Такая капсула может попасть в рекомендации и личные запросы клиентов.</p>
-          </article>
+          </EntityCardLink>
         ))}
       </div>
     </section>
@@ -543,14 +588,21 @@ export function ProfilePage() {
           <div className="profile-card-grid">
             {savedCapsules.length ? (
               savedCapsules.map((item) => (
-                <article className="profile-content-card capsule-preview-card" key={item.id}>
+                <EntityCardLink
+                  as="article"
+                  className="profile-content-card capsule-preview-card"
+                  key={item.id}
+                  entity={item}
+                  entityType="capsule"
+                  ariaLabel={`Открыть капсулу ${item.name}`}
+                >
                   <div className="capsule-preview-card-head">
                     <span className="capsule-preview-pill">Сохранено</span>
                     <strong>{formatCurrency(item.total)}</strong>
                   </div>
                   <h3>{item.name}</h3>
                   <p>{item.items} вещей в капсуле. Можно вернуться к подборке и открыть дизайнера.</p>
-                </article>
+                </EntityCardLink>
               ))
             ) : (
               <div className="empty-block">Пока здесь пусто. Сохрани первую капсулу, и она появится в профиле.</div>
@@ -558,6 +610,10 @@ export function ProfilePage() {
           </div>
         </section>
       );
+    }
+
+    if (activeTab === "messages") {
+      return renderMessages();
     }
 
     if (activeTab === "history") {

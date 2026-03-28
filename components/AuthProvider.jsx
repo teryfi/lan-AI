@@ -77,11 +77,46 @@ export function AuthProvider({ children }) {
     }));
   };
 
+  const createCapsulePayload = ({
+    id,
+    name,
+    items,
+    designer,
+    description,
+    styleLogic,
+    tags
+  }) => {
+    const safeItems = items.filter(Boolean);
+
+    return {
+      id,
+      source: "saved",
+      name,
+      designer: designer || safeItems[0]?.designer || "Лань AI",
+      items: safeItems.length,
+      itemIds: safeItems.map((item) => item.id),
+      budget: safeItems.reduce((sum, item) => sum + item.price, 0),
+      totalPrice: safeItems.reduce((sum, item) => sum + item.price, 0),
+      total: safeItems.reduce((sum, item) => sum + item.price, 0),
+      previewImages: safeItems.map((item) => item.image).slice(0, 5),
+      description: description || "Капсула собрана как готовый сценарий и сохраняет быстрый переход к каждой вещи внутри.",
+      styleLogic: styleLogic || "Подборка удерживает баланс ролей, силуэта и бюджета, чтобы вещи работали как единый комплект.",
+      tags: tags?.length ? tags : [...new Set(safeItems.flatMap((item) => item.styles || []))].slice(0, 4)
+    };
+  };
+
 
   const addCapsule = (capsule) => {
-    const total = capsule.items.reduce((sum, item) => sum + item.price, 0);
     setSavedCapsules((prev) => [
-      { id: capsule.id, name: capsule.name, items: capsule.items.length, total },
+      createCapsulePayload({
+        id: capsule.id,
+        name: capsule.name,
+        items: capsule.items,
+        designer: capsule.designer,
+        description: capsule.description,
+        styleLogic: capsule.styleLogic,
+        tags: capsule.tags
+      }),
       ...prev
     ]);
   };
@@ -109,8 +144,22 @@ export function AuthProvider({ children }) {
   };
 
   const createDesignerCapsule = (name) => {
+    const sourceItems = products
+      .filter((item) => item.designer === user.name)
+      .slice(0, 5);
+    const capsuleItems = sourceItems.length ? sourceItems : products.slice(0, 5);
+
     setDesignerCapsules((prev) => [
-      { id: Date.now(), name, items: Math.max(4, Math.min(6, products.length)), budget: products.slice(0, 4).reduce((sum, item) => sum + item.price, 0) },
+      createCapsulePayload({
+        id: Date.now(),
+        source: "designer",
+        name,
+        items: capsuleItems,
+        designer: user.name || capsuleItems[0]?.designer || "Лань AI",
+        description: "Новая капсула дизайнера собрана как презентационный комплект, который можно открыть из любой точки сайта.",
+        styleLogic: "Подборка показывает авторскую логику сочетаний и помогает быстро перейти от просмотра к обсуждению.",
+        tags: ["designer capsule", "новая подборка", "авторский стиль"]
+      }),
       ...prev
     ]);
   };

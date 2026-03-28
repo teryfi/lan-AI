@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import { ProfilePage } from "@/components/ProfilePage";
 
 export default function Page() {
-  return <ProfilePage />;
+  return (
+    <Suspense fallback={<div className="page-grid"><div className="empty-block">Загружаем профиль...</div></div>}>
+      <ProfilePage />
+    </Suspense>
+  );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BarChart3, Bot, CircleDollarSign, MessageCircle, ShoppingBag, Sparkles } from "lucide-react";
 import { useApp } from "@/components/AuthProvider";
+import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 import { Reveal } from "@/components/Reveal";
 import { PremiumHero } from "@/components/PremiumHero";
 
@@ -197,7 +198,14 @@ export function HomePage() {
 
           <div className="featured-grid">
             {featuredCapsules.map((capsule) => (
-              <article className="featured-card" key={capsule.id}>
+              <EntityCardLink
+                as="article"
+                className="featured-card"
+                key={capsule.id}
+                entity={capsule}
+                entityType="capsule"
+                ariaLabel={`Открыть капсулу ${capsule.name}`}
+              >
                 <div className="featured-capsule-preview" aria-hidden="true">
                   {(capsule.previewImages || [capsule.image]).slice(0, 5).map((image, index) => (
                     <div
@@ -215,7 +223,7 @@ export function HomePage() {
                     <span>{capsule.price.toLocaleString("ru-RU")} ₽</span>
                   </div>
                 </div>
-              </article>
+              </EntityCardLink>
             ))}
           </div>
         </section>
