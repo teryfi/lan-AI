@@ -9519,6 +9519,132 @@ body.auth-modal-open .premium-hero-content {
   line-height: 1.45;
 }
 
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-actions .primary-btn,
+.hero-actions .ghost-btn {
+  min-height: 56px;
+  padding: 0 22px;
+  border-radius: 20px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  text-align: center;
+  justify-content: center;
+}
+
+.filter-panel-curated {
+  display: grid;
+  gap: 18px;
+}
+
+.filter-panel-head {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-panel-kicker {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(99, 114, 132, 0.66);
+}
+
+.filter-panel-curated h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #60738c;
+}
+
+.filter-group-tight {
+  margin-top: -2px;
+}
+
+.feed-filter-choice-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.feed-filter-choice,
+.feed-filter-pill,
+.feed-filter-row {
+  appearance: none;
+  border: 1px solid rgba(175, 196, 218, 0.34);
+  background: rgba(255, 255, 255, 0.72);
+  color: #294157;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.feed-filter-choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.feed-filter-choice:hover,
+.feed-filter-pill:hover,
+.feed-filter-row:hover {
+  transform: translateY(-1px);
+  border-color: rgba(70, 165, 216, 0.32);
+}
+
+.feed-filter-choice.active {
+  background: linear-gradient(135deg, rgba(44, 199, 192, 0.16), rgba(103, 150, 255, 0.18));
+  border-color: rgba(65, 176, 208, 0.36);
+  color: #17384f;
+}
+
+.feed-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feed-filter-pill {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.feed-filter-pill.active {
+  background: rgba(29, 198, 188, 0.12);
+  border-color: rgba(29, 198, 188, 0.28);
+  color: #11837f;
+}
+
+.feed-filter-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.feed-filter-row {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.feed-filter-row.active {
+  background: linear-gradient(135deg, rgba(25, 191, 186, 0.14), rgba(94, 142, 251, 0.14));
+  border-color: rgba(78, 161, 218, 0.34);
+  color: #17384f;
+}
+
 @media (max-width: 720px) {
   .detail-page-shell .detail-summary-row-item-swap {
     grid-template-columns: 1fr;
