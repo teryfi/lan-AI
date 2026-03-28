@@ -129,7 +129,7 @@ export function AuthProvider({ children }) {
       email: payload.email,
       role: payload.role,
       avatar,
-      privacy: payload.privacy,
+      privacy: payload.privacy || "public",
       authenticated: true
     });
     setAuthOpen(false);

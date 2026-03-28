@@ -10,7 +10,7 @@ import { PremiumHero } from "@/components/PremiumHero";
 
 export function HomePage() {
   const router = useRouter();
-  const { user, setAuthOpen, featuredCapsules } = useApp();
+  const { user, setAuthOpen, featuredCapsules, authOpen } = useApp();
   const featureCards = [
     {
       icon: Bot,
@@ -45,7 +45,7 @@ export function HomePage() {
   ];
 
   if (!user.authenticated) {
-    return <PremiumHero onStart={() => setAuthOpen(true)} />;
+    return <PremiumHero onStart={() => setAuthOpen(true)} authModalOpen={authOpen} />;
   }
 
   if (!user.authenticated) {
