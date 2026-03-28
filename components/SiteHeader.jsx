@@ -69,6 +69,7 @@ export function SiteHeader() {
               <Link className={`nav-link ${pathname === "/" ? "active" : ""}`} href="/">Главная</Link>
               <Link className={`nav-link ${pathname === "/feed" ? "active" : ""}`} href="/feed">Лента</Link>
               <Link className={`nav-link ${pathname === "/ai" ? "active" : ""}`} href="/ai">AI Конструктор</Link>
+              <Link className={`nav-link ${pathname === "/assistant" ? "active" : ""}`} href="/assistant">Помощник</Link>
               <Link className={`nav-link ${pathname === "/profile" ? "active" : ""}`} href="/profile">Профиль</Link>
             </nav>
 

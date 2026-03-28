@@ -73,7 +73,7 @@ export function FeedPage() {
   }
 
   return (
-    <div className="page-grid">
+    <div className="page-grid feed-page-grid">
       <div className="section-head compact-head">
         <div>
           <h2>Новые вещи от дизайнеров</h2>
@@ -92,7 +92,6 @@ export function FeedPage() {
         <div className="feed-layout">
           <aside className="filter-panel filter-panel-curated">
             <div className="filter-panel-head">
-              <span className="filter-panel-kicker">Лента</span>
               <h3>Категории</h3>
             </div>
 

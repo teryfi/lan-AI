@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   Check,
@@ -15,19 +14,23 @@ import {
 } from "lucide-react";
 import { useApp } from "@/components/AuthProvider";
 import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
+import {
+  aiFilterOptions,
+  defaultAiFilters,
+  getActiveAiFilterCount,
+  getAiPreferenceScore,
+  matchesAiFilters
+} from "@/lib/aiFilters";
 import { referenceCapsuleResults } from "@/lib/referenceData";
 
 export function AIPage() {
-  const searchParams = useSearchParams();
   const {
     user,
     setAuthOpen,
     products,
     savedItems,
     toggleSave,
-    addCapsule,
-    assistantMessages,
-    askAssistant
+    addCapsule
   } = useApp();
 
   const [query, setQuery] = useState("");
@@ -35,13 +38,8 @@ export function AIPage() {
   const [searched, setSearched] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
-  const [assistantInput, setAssistantInput] = useState("");
   const [capsuleItems, setCapsuleItems] = useState([]);
-  const [filters, setFilters] = useState({
-    style: "",
-    season: "",
-    maxPrice: 50000
-  });
+  const [filters, setFilters] = useState(defaultAiFilters);
 
   const presets = [
     "Деловой образ для офиса на весну",
@@ -51,12 +49,13 @@ export function AIPage() {
   ];
 
   const filteredProducts = useMemo(() => {
-    return products.filter((item) => {
-      const byStyle = !filters.style || item.styles.includes(filters.style);
-      const bySeason = !filters.season || `${item.title} ${item.description}`.toLowerCase().includes(filters.season);
-      const byPrice = item.price <= filters.maxPrice;
-      return byStyle && bySeason && byPrice;
-    });
+    return [...products]
+      .filter((item) => matchesAiFilters(item, filters))
+      .sort((a, b) => {
+        const scoreDiff = getAiPreferenceScore(b, filters) - getAiPreferenceScore(a, filters);
+        if (scoreDiff !== 0) return scoreDiff;
+        return a.price - b.price;
+      });
   }, [filters, products]);
 
   const productById = useMemo(() => new Map(products.map((item) => [item.id, item])), [products]);
@@ -71,13 +70,11 @@ export function AIPage() {
   }, [productById]);
 
   const capsuleTotal = capsuleItems.reduce((sum, item) => sum + item.price, 0);
+  const activeFiltersCount = getActiveAiFilterCount(filters);
 
-  useEffect(() => {
-    const assistantPrompt = searchParams.get("assistantPrompt");
-    if (!assistantPrompt) return;
-
-    setAssistantInput((currentValue) => currentValue || assistantPrompt);
-  }, [searchParams]);
+  const updateFilter = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -183,38 +180,141 @@ export function AIPage() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
             >
-              <label>
-                <span>Стиль</span>
-                <select value={filters.style} onChange={(event) => setFilters((prev) => ({ ...prev, style: event.target.value }))}>
-                  <option value="">Все</option>
-                  <option value="minimal">Минимализм</option>
-                  <option value="classic">Классика</option>
-                  <option value="casual">Кэжуал</option>
-                  <option value="street">Стритвир</option>
-                  <option value="romantic">Романтичный</option>
-                </select>
-              </label>
-              <label>
-                <span>Сезон</span>
-                <select value={filters.season} onChange={(event) => setFilters((prev) => ({ ...prev, season: event.target.value.toLowerCase() }))}>
-                  <option value="">Все</option>
-                  <option value="вес">Весна</option>
-                  <option value="лет">Лето</option>
-                  <option value="осе">Осень</option>
-                  <option value="зим">Зима</option>
-                </select>
-              </label>
-              <label className="wide">
-                <span>Максимальный бюджет: {filters.maxPrice.toLocaleString("ru-RU")} ₽</span>
-                <input
-                  type="range"
-                  min={10000}
-                  max={80000}
-                  step={1000}
-                  value={filters.maxPrice}
-                  onChange={(event) => setFilters((prev) => ({ ...prev, maxPrice: Number(event.target.value) }))}
-                />
-              </label>
+              <div className="reference-ai-filters-head">
+                <div>
+                  <strong>Тонкая настройка подбора</strong>
+                  <span>{activeFiltersCount ? `${activeFiltersCount} активных критериев` : "Выбери важные параметры для капсулы"}</span>
+                </div>
+                <button type="button" className="reference-ai-filters-reset" onClick={() => setFilters(defaultAiFilters)}>
+                  Сбросить
+                </button>
+              </div>
+
+              <div className="reference-ai-filters-grid">
+                <label>
+                  <span>Стиль</span>
+                  <select value={filters.style} onChange={(event) => updateFilter("style", event.target.value)}>
+                    {aiFilterOptions.styles.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Сезон</span>
+                  <select value={filters.season} onChange={(event) => updateFilter("season", event.target.value)}>
+                    {aiFilterOptions.seasons.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Категория</span>
+                  <select value={filters.category} onChange={(event) => updateFilter("category", event.target.value)}>
+                    {aiFilterOptions.categories.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Сценарий</span>
+                  <select value={filters.occasion} onChange={(event) => updateFilter("occasion", event.target.value)}>
+                    {aiFilterOptions.occasions.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Палитра</span>
+                  <select value={filters.palette} onChange={(event) => updateFilter("palette", event.target.value)}>
+                    {aiFilterOptions.palettes.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Силуэт</span>
+                  <select value={filters.silhouette} onChange={(event) => updateFilter("silhouette", event.target.value)}>
+                    {aiFilterOptions.silhouettes.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Комфорт</span>
+                  <select value={filters.comfort} onChange={(event) => updateFilter("comfort", event.target.value)}>
+                    {aiFilterOptions.comforts.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Тип телосложения</span>
+                  <select value={filters.bodyType} onChange={(event) => updateFilter("bodyType", event.target.value)}>
+                    {aiFilterOptions.bodyTypes.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Рост</span>
+                  <select value={filters.heightRange} onChange={(event) => updateFilter("heightRange", event.target.value)}>
+                    {aiFilterOptions.heightRanges.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Вес</span>
+                  <select value={filters.weightRange} onChange={(event) => updateFilter("weightRange", event.target.value)}>
+                    {aiFilterOptions.weightRanges.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Размерный диапазон</span>
+                  <select value={filters.sizeRange} onChange={(event) => updateFilter("sizeRange", event.target.value)}>
+                    {aiFilterOptions.sizeRanges.map((option) => (
+                      <option key={option.value || "all"} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Минимальная цена</span>
+                  <select value={filters.minPrice} onChange={(event) => updateFilter("minPrice", Number(event.target.value))}>
+                    {aiFilterOptions.minPrices.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="wide">
+                  <span>Максимальный бюджет: {filters.maxPrice.toLocaleString("ru-RU")} ₽</span>
+                  <input
+                    type="range"
+                    min={10000}
+                    max={80000}
+                    step={1000}
+                    value={filters.maxPrice}
+                    onChange={(event) => updateFilter("maxPrice", Number(event.target.value))}
+                  />
+                </label>
+              </div>
+
+              <p className="reference-ai-filters-note">
+                Рост, вес и тип телосложения используются как мягкие критерии приоритета, чтобы универсальные вещи не пропадали из выдачи.
+              </p>
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -341,55 +441,6 @@ export function AIPage() {
           </div>
         </div>
       ) : null}
-
-      <section className="reference-assistant-panel" id="assistant-panel">
-        <div className="reference-ai-section-head">
-          <h2>AI-помощник по стилю</h2>
-          <span>Только на русском</span>
-        </div>
-
-        {searchParams.get("assistantItemTitle") ? (
-          <div className="assistant-context-chip">Контекст: {searchParams.get("assistantItemTitle")}</div>
-        ) : null}
-
-        <div className="reference-assistant-messages">
-          {assistantMessages.map((message, index) => (
-            <div key={`${message.role}-${index}`} className={`reference-assistant-bubble ${message.role === "user" ? "self" : ""}`}>
-              {message.text}
-            </div>
-          ))}
-        </div>
-
-        <div className="reference-ai-presets reference-assistant-suggestions">
-          {[
-            "Собери лук на каждый день",
-            "Что выбрать для офиса?",
-            "Какую обувь взять к капсуле?",
-            "Какая палитра выглядит дороже?"
-          ].map((prompt) => (
-            <button key={prompt} onClick={() => askAssistant(prompt)}>
-              {prompt}
-            </button>
-          ))}
-        </div>
-
-        <div className="reference-assistant-input">
-          <input
-            value={assistantInput}
-            onChange={(event) => setAssistantInput(event.target.value)}
-            placeholder="Спроси о стиле, сочетаниях, бюджете или замене вещи"
-          />
-          <button
-            onClick={() => {
-              if (!assistantInput.trim()) return;
-              askAssistant(assistantInput.trim());
-              setAssistantInput("");
-            }}
-          >
-            Спросить
-          </button>
-        </div>
-      </section>
 
       <AnimatePresence>
         {capsuleItems.length ? (

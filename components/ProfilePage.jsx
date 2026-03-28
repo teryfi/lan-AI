@@ -82,8 +82,7 @@ export function ProfilePage() {
   const [message, setMessage] = useState("");
   const [capsuleName, setCapsuleName] = useState("");
   const [activeDayIndex, setActiveDayIndex] = useState(4);
-  const defaultRevenueIndex = 5;
-  const [activeRevenueIndex, setActiveRevenueIndex] = useState(defaultRevenueIndex);
+  const [activeRevenueIndex, setActiveRevenueIndex] = useState(null);
   const [profileForm, setProfileForm] = useState({
     name: user.name || "",
     email: user.email || "",
@@ -201,8 +200,9 @@ export function ProfilePage() {
   ];
 
   const maxWeeklyValue = Math.max(...weeklyActivity.flatMap((item) => [item.views, item.clicks, item.saves]));
+  const maxRevenueValue = Math.max(...revenueMonths.map((item) => item.value));
   const activeDay = weeklyActivity[activeDayIndex] || weeklyActivity[0];
-  const activeRevenue = revenueMonths[activeRevenueIndex] || revenueMonths[defaultRevenueIndex];
+  const activeRevenue = activeRevenueIndex === null ? null : revenueMonths[activeRevenueIndex];
 
   const stats = isDesigner
     ? [
@@ -337,6 +337,7 @@ export function ProfilePage() {
               ))}
             </div>
           </article>
+
         </div>
 
         <div className="analytics-board-grid analytics-board-grid-bottom">
@@ -345,25 +346,30 @@ export function ProfilePage() {
               <h3>Выручка по месяцам</h3>
             </div>
             <div className="analytics-bar-chart">
-              <div
+              {activeRevenue ? (
+                <div
                 className="analytics-revenue-tooltip"
                 style={{ left: `calc(${(activeRevenueIndex / Math.max(revenueMonths.length - 1, 1)) * 100}% - 62px)` }}
               >
                 <strong>{activeRevenue.month}</strong>
                 <span>Выручка : {activeRevenue.amount.toLocaleString("ru-RU")} ₽</span>
-              </div>
+                </div>
+              ) : null}
               {revenueMonths.map((item, index) => (
                 <button
                   className={`analytics-bar-item ${index === activeRevenueIndex ? "active" : ""}`}
                   key={item.month}
                   onMouseEnter={() => setActiveRevenueIndex(index)}
                   onFocus={() => setActiveRevenueIndex(index)}
-                  onMouseLeave={() => setActiveRevenueIndex(defaultRevenueIndex)}
-                  onBlur={() => setActiveRevenueIndex(defaultRevenueIndex)}
+                  onMouseLeave={() => setActiveRevenueIndex(null)}
+                  onBlur={() => setActiveRevenueIndex(null)}
                   type="button"
                   aria-label={`Показать выручку за ${item.month}`}
                 >
-                  <div className={`analytics-bar ${index === activeRevenueIndex ? "highlight" : ""}`} style={{ height: `${item.value}%` }}></div>
+                  <div
+                    className={`analytics-bar ${index === activeRevenueIndex ? "highlight" : ""}`}
+                    style={{ height: `${(item.value / maxRevenueValue) * 100}%` }}
+                  ></div>
                   <span>{item.month}</span>
                 </button>
               ))}
@@ -377,13 +383,13 @@ export function ProfilePage() {
             <div className="analytics-donut-wrap">
               <div className="analytics-donut"></div>
               <div className="analytics-donut-legend">
-                {analytics.audience.map((item, index) => (
-                  <div className="analytics-donut-row" key={item.label}>
-                    <span className={`analytics-dot dot-${index + 1}`}></span>
-                    <span>{item.label}</span>
-                    <strong>{item.value}%</strong>
-                  </div>
-                ))}
+              {analytics.audience.map((item, index) => (
+                <div className="analytics-donut-row" key={item.label}>
+                  <span className={`analytics-dot dot-${index + 1}`}></span>
+                  <span>{item.label}</span>
+                  <strong>{item.value}%</strong>
+                </div>
+              ))}
               </div>
             </div>
           </article>
@@ -644,7 +650,7 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="page-grid">
+    <div className={`page-grid profile-page-grid ${isDesigner && activeTab === "analytics" ? "profile-page-grid-analytics" : ""}`}>
       <Reveal>
         <section className={`profile-reference-shell ${isDesigner ? "designer-profile-shell" : ""} ${isDesigner && activeTab === "analytics" ? "designer-analytics-shell" : ""}`}>
           <div className="profile-reference-cover">
@@ -668,6 +674,15 @@ export function ProfilePage() {
               </div>
             </div>
 
+            <div className="profile-reference-inline-stats">
+              {stats.map((item) => (
+                <article key={item.label}>
+                  <strong>{item.value}</strong>
+                  <span>{item.label}</span>
+                </article>
+              ))}
+            </div>
+
             <div className="profile-reference-actions">
               <button className="ghost-btn" type="button" onClick={() => setEditMode(true)}>
                 <Edit3 size={14} /> Редактировать
@@ -676,15 +691,6 @@ export function ProfilePage() {
                 <Share2 size={14} /> Поделиться
               </button>
             </div>
-          </div>
-
-          <div className="profile-reference-stats">
-            {stats.map((item) => (
-              <article key={item.label}>
-                <strong>{item.value}</strong>
-                <span>{item.label}</span>
-              </article>
-            ))}
           </div>
 
           <div className="profile-reference-tabs">
