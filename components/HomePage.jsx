@@ -6,6 +6,7 @@ import { BarChart3, Bot, CircleDollarSign, MessageCircle, ShoppingBag, Sparkles 
 import { useApp } from "@/components/AuthProvider";
 import { Reveal } from "@/components/Reveal";
 import { AuthSceneCarousel } from "@/components/AuthSceneCarousel";
+import { PremiumHero } from "@/components/PremiumHero";
 
 export function HomePage() {
   const router = useRouter();
@@ -42,6 +43,10 @@ export function HomePage() {
       text: "Образ собирается по ролям: верх, низ, верхний слой, обувь и акцент.",
     },
   ];
+
+  if (!user.authenticated) {
+    return <PremiumHero onStart={() => setAuthOpen(true)} />;
+  }
 
   if (!user.authenticated) {
     return (

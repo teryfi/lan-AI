@@ -31,6 +31,10 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  if (isAuthLanding) {
+    return null;
+  }
+
   return (
     <header className={`topbar ${isHidden ? "collapsed" : ""}`}>
       <div className={`container topbar-inner ${isAuthLanding ? "auth-center" : ""}`}>
