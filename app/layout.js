@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/components/AuthProvider";
 import { BackgroundMotion } from "@/components/BackgroundMotion";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
             <main className="page-shell">{children}</main>
             <AuthModal />
           </div>
+          <Analytics />
         </AuthProvider>
       </body>
     </html>
