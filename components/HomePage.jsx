@@ -8,6 +8,7 @@ import { useApp } from "@/components/AuthProvider";
 import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 import { Reveal } from "@/components/Reveal";
 import { PremiumHero } from "@/components/PremiumHero";
+import { WelcomeOverlay } from "@/components/WelcomeOverlay";
 
 export function HomePage() {
   const router = useRouter();
@@ -47,12 +48,19 @@ export function HomePage() {
   ];
 
   if (!user.authenticated) {
-    return <PremiumHero onStart={() => setAuthOpen(true)} authModalOpen={authOpen} />;
+    return (
+      <>
+        <WelcomeOverlay />
+        <PremiumHero onStart={() => setAuthOpen(true)} authModalOpen={authOpen} />
+      </>
+    );
   }
 
 
   return (
-    <div className="page-grid">
+    <>
+      <WelcomeOverlay />
+      <div className="page-grid">
       <Reveal>
         <section className="hero-section">
           <div className="hero-layout-container">
@@ -305,6 +313,7 @@ export function HomePage() {
           </div>
         </section>
       </Reveal>
-    </div>
+      </div>
+    </>
   );
 }
