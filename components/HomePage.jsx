@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BarChart3, Bot, CircleDollarSign, MessageCircle, ShoppingBag, Sparkles } from "lucide-react";
@@ -10,7 +11,8 @@ import { PremiumHero } from "@/components/PremiumHero";
 
 export function HomePage() {
   const router = useRouter();
-  const { user, setAuthOpen, featuredCapsules, authOpen } = useApp();
+  const { user, setAuthOpen, featuredCapsules, authOpen, products } = useApp();
+  const productById = useMemo(() => new Map(products.map((item) => [item.id, item])), [products]);
   const featureCards = [
     {
       icon: Bot,
@@ -197,34 +199,43 @@ export function HomePage() {
           </div>
 
           <div className="featured-grid">
-            {featuredCapsules.map((capsule) => (
-              <EntityCardLink
-                as="article"
-                className="featured-card"
-                key={capsule.id}
-                entity={capsule}
-                entityType="capsule"
-                ariaLabel={`Открыть капсулу ${capsule.name}`}
-              >
-                <div className="featured-capsule-preview" aria-hidden="true">
-                  {(capsule.previewImages || [capsule.image]).slice(0, 5).map((image, index) => (
-                    <div
-                      key={`${capsule.id}-${index}`}
-                      className={`featured-capsule-tile featured-capsule-tile-${index + 1}`}
-                      style={{ "--preview": `url(${image})` }}
-                    ></div>
-                  ))}
-                </div>
-                <div className="featured-content">
-                  <h3>{capsule.name}</h3>
-                  <p className="muted-text">{capsule.designer}</p>
-                  <div className="featured-meta">
-                    <span>{capsule.itemsCount} вещей</span>
-                    <span>{capsule.price.toLocaleString("ru-RU")} ₽</span>
+            {featuredCapsules.map((capsule) => {
+              const itemPreviewImages = (capsule.itemIds || [])
+                .map((id) => productById.get(id)?.image)
+                .filter(Boolean);
+              const previewImages = [...new Set([...itemPreviewImages, ...(capsule.previewImages || []), capsule.image])]
+                .filter(Boolean)
+                .slice(0, 5);
+
+              return (
+                <EntityCardLink
+                  as="article"
+                  className="featured-card"
+                  key={capsule.id}
+                  entity={capsule}
+                  entityType="capsule"
+                  ariaLabel={`Открыть капсулу ${capsule.name}`}
+                >
+                  <div className="featured-capsule-preview" aria-hidden="true">
+                    {previewImages.map((image, index) => (
+                      <div
+                        key={`${capsule.id}-${index}`}
+                        className={`featured-capsule-tile featured-capsule-tile-${index + 1}`}
+                        style={{ "--preview": `url(${image})` }}
+                      ></div>
+                    ))}
                   </div>
-                </div>
-              </EntityCardLink>
-            ))}
+                  <div className="featured-content">
+                    <h3>{capsule.name}</h3>
+                    <p className="muted-text">{capsule.designer}</p>
+                    <div className="featured-meta">
+                      <span>{capsule.itemsCount} вещей</span>
+                      <span>{capsule.price.toLocaleString("ru-RU")} ₽</span>
+                    </div>
+                  </div>
+                </EntityCardLink>
+              );
+            })}
           </div>
         </section>
       </Reveal>
