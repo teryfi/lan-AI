@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function BackgroundMotion() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const root = document.documentElement;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobileViewport = window.innerWidth <= 768;
+    const disableForRoute = pathname === "/feed" || pathname === "/profile";
 
-    if (prefersReducedMotion || isMobileViewport) {
+    if (prefersReducedMotion || isMobileViewport || disableForRoute) {
       root.style.setProperty("--bg-progress", "0");
       root.style.setProperty("--bg-shift", "0px");
       root.style.setProperty("--bg-drift", "0px");
@@ -61,7 +65,7 @@ export function BackgroundMotion() {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

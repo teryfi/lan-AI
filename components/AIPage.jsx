@@ -172,7 +172,7 @@ export function AIPage() {
           ))}
         </div>
 
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {filtersOpen ? (
             <motion.div
               className="reference-ai-filters"
@@ -320,13 +320,13 @@ export function AIPage() {
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {loading ? (
           <motion.div
             className="reference-ai-loading"
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 1, y: 0 }}
           >
             <motion.div
               className="reference-ai-loading-icon"
@@ -442,13 +442,13 @@ export function AIPage() {
         </div>
       ) : null}
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {capsuleItems.length ? (
           <motion.div
             className="reference-ai-bottom-bar"
-            initial={{ y: 100, opacity: 0 }}
+            initial={false}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
+            exit={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 24 }}
           >
             <div className="reference-ai-bottom-preview">
