@@ -11132,13 +11132,13 @@ body.welcome-overlay-lock {
   }
 
   .topbar.collapsed {
-    transform: none;
+    transform: translateY(calc(-100% + 10px));
   }
 
   .brand-button {
     grid-area: brand;
     min-width: 0;
-    margin-left: -8px;
+    margin-left: 0;
     gap: 4px;
   }
 
@@ -11295,13 +11295,16 @@ body.welcome-overlay-lock {
   .page-grid .hero-copy-wide {
     padding: 0;
     gap: 14px;
+    align-items: center;
+    text-align: center;
   }
 
   .page-grid .hero-copy-wide h1,
   .page-grid .hero-copy h1 {
-    max-width: 10ch;
-    font-size: clamp(2.7rem, 15vw, 4rem);
-    line-height: 0.9;
+    max-width: 8ch;
+    margin: 0 auto;
+    font-size: clamp(2.1rem, 11vw, 3.05rem);
+    line-height: 0.92;
     letter-spacing: -0.05em;
     text-wrap: balance;
   }
@@ -11310,8 +11313,9 @@ body.welcome-overlay-lock {
   .page-grid .hero-text-left {
     max-width: none;
     margin: 0;
-    font-size: 1.08rem;
-    line-height: 1.58;
+    font-size: 1rem;
+    line-height: 1.52;
+    text-align: center;
   }
 
   .page-grid .hero-actions {
@@ -11335,6 +11339,7 @@ body.welcome-overlay-lock {
   .page-grid .hero-editorial-card,
   .page-grid .hero-editorial-card-compact {
     min-height: auto;
+    margin: 0 auto;
   }
 
   .page-grid .hero-editorial-image {
@@ -11352,6 +11357,7 @@ body.welcome-overlay-lock {
 
   .page-grid .hero-editorial-copy {
     padding: 16px;
+    text-align: center;
   }
 
   .page-grid .hero-editorial-copy h2 {
@@ -11368,11 +11374,19 @@ body.welcome-overlay-lock {
   .page-grid .curation-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+    align-items: stretch;
   }
 
   .page-grid .curation-item {
     padding: 16px 14px;
     border-radius: 18px;
+    text-align: center;
+  }
+
+  .page-grid .curation-item:last-child {
+    grid-column: 1 / -1;
+    max-width: 240px;
+    justify-self: center;
   }
 
   .page-grid .curation-item span {
@@ -11395,8 +11409,11 @@ body.welcome-overlay-lock {
 
   .page-grid .steps-head,
   .page-grid .section-head {
+    display: grid;
     grid-template-columns: 1fr;
+    justify-items: center;
     gap: 12px;
+    text-align: center;
   }
 
   .page-grid .steps-intro h2,
@@ -11412,11 +11429,14 @@ body.welcome-overlay-lock {
   .page-grid .steps-note,
   .page-grid .story-summary {
     width: 100%;
+    max-width: 100%;
     padding: 16px;
     border-radius: 20px;
     transform: none;
     opacity: 1;
     animation: none;
+    justify-self: stretch;
+    text-align: left;
   }
 
   .page-grid .steps-note strong,
@@ -11487,6 +11507,7 @@ body.welcome-overlay-lock {
 
   .page-grid .featured-card {
     border-radius: 18px;
+    min-width: 0;
   }
 
   .page-grid .featured-capsule-preview {
@@ -11495,6 +11516,7 @@ body.welcome-overlay-lock {
 
   .page-grid .featured-content {
     padding: 14px;
+    text-align: center;
   }
 
   .page-grid .featured-card h3 {
@@ -11516,6 +11538,64 @@ body.welcome-overlay-lock {
     grid-template-columns: 1fr;
     align-items: start;
     gap: 4px;
+    justify-items: center;
+  }
+
+  .page-grid .story-lead,
+  .page-grid .home-dark-head,
+  .page-grid .home-dark-cta-inner,
+  .page-grid .compact-head {
+    width: 100%;
+    text-align: center;
+  }
+
+  .page-grid .home-dark-head p,
+  .page-grid .home-dark-cta-inner p {
+    margin-top: 14px;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .page-grid .home-dark-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .page-grid .home-dark-card {
+    padding: 18px 16px;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .page-grid .home-dark-icon {
+    margin: 0 auto 14px;
+  }
+
+  .page-grid .home-dark-card h3 {
+    font-size: 1.12rem;
+  }
+
+  .page-grid .home-dark-card p {
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
+  .page-grid .home-dark-cta {
+    padding-top: 28px;
+  }
+
+  .page-grid .home-dark-footer {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .page-grid .home-dark-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
   }
 
   .feed-grid {
@@ -11523,6 +11603,26 @@ body.welcome-overlay-lock {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-count: unset;
     gap: 12px;
+  }
+
+  .feed-page-grid,
+  .feed-layout,
+  .feed-layout > div,
+  .feed-grid {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    justify-self: stretch;
+  }
+
+  .feed-layout {
+    gap: 12px;
+  }
+
+  .feed-toolbar,
+  .feed-card,
+  .feed-grid > * {
+    margin-left: 0;
   }
 
   .feed-card {
@@ -11925,8 +12025,8 @@ body.welcome-overlay-lock {
 
   .page-grid .hero-copy-wide h1,
   .page-grid .hero-copy h1 {
-    max-width: 9ch;
-    font-size: clamp(2.35rem, 14vw, 3.35rem);
+    max-width: 8ch;
+    font-size: clamp(1.95rem, 10.5vw, 2.65rem);
   }
 
   .page-grid .hero-actions,

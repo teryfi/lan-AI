@@ -22,11 +22,14 @@ export function SiteHeader() {
 
     const updateVisibility = () => {
       const currentY = window.scrollY;
+      const isMobileViewport = window.innerWidth <= 768;
+      const revealOffset = isMobileViewport ? 16 : 40;
+      const hideOffset = isMobileViewport ? 32 : 120;
       let nextHidden = false;
 
-      if (currentY < 40) {
+      if (currentY < revealOffset) {
         nextHidden = false;
-      } else if (currentY > lastY && currentY > 120) {
+      } else if (currentY > lastY && currentY > hideOffset) {
         nextHidden = true;
       } else if (currentY < lastY) {
         nextHidden = false;
