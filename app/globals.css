@@ -11105,20 +11105,64 @@ body.welcome-overlay-lock {
 }
 
 @media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  body,
+  input,
+  textarea,
+  select,
+  button {
+    font-size: 16px;
+  }
+
   .topbar-inner {
-    gap: 12px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    width: min(calc(100vw - 24px), var(--container));
+    min-height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand actions"
+      "nav nav";
+    align-items: center;
+    gap: 8px 10px;
+    padding: 8px 0 10px;
+  }
+
+  .topbar.collapsed {
+    transform: none;
+  }
+
+  .brand-button {
+    grid-area: brand;
+    min-width: 0;
+    margin-left: -8px;
+    gap: 4px;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 14px;
+  }
+
+  .brand-copy strong {
+    font-size: 1rem;
+    line-height: 1;
   }
 
   .topnav {
+    grid-area: nav;
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    gap: 8px;
-    padding-bottom: 4px;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    padding-bottom: 0;
+    overflow: hidden;
   }
 
   .topnav::-webkit-scrollbar {
@@ -11126,13 +11170,26 @@ body.welcome-overlay-lock {
   }
 
   .topbar-actions {
-    width: 100%;
-    justify-content: space-between;
+    grid-area: actions;
+    width: auto;
+    min-width: 0;
+    justify-content: flex-end;
     align-items: center;
+    gap: 8px;
   }
 
   .topbar-actions .role-switch {
     display: none;
+  }
+
+  .topbar-icon-link,
+  .profile-chip.compact,
+  .profile-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    flex: 0 0 44px;
   }
 
   .nav-link,
@@ -11149,6 +11206,37 @@ body.welcome-overlay-lock {
   .messages-sidebar-item,
   .profile-logout-button {
     min-height: 44px;
+  }
+
+  .nav-link {
+    min-width: 0;
+    justify-content: center;
+    padding: 7px 4px;
+    font-size: 0.7rem;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    border-radius: 16px;
+  }
+
+  .page-shell,
+  .feed-layout,
+  .feed-grid,
+  .hero-grid,
+  .hero-grid-balanced,
+  .profile-reference-shell,
+  .messages-page-grid,
+  .messages-workspace-shell,
+  .detail-page-shell,
+  .detail-page-shell > *,
+  .reference-ai-shell,
+  .reference-ai-panel,
+  .reference-ai-product-grid,
+  .reference-ai-product-card,
+  .reference-assistant-panel {
+    min-width: 0;
   }
 
   .hero-section,
@@ -11169,8 +11257,9 @@ body.welcome-overlay-lock {
   .premium-hero-title,
   .profile-reference-title-row h1,
   .detail-page-shell .detail-title-single-line {
-    font-size: clamp(1.7rem, 7vw, 2.2rem);
+    font-size: clamp(1.5rem, 7vw, 1.9rem);
     white-space: normal;
+    line-height: 1.05;
   }
 
   .hero-text,
@@ -11178,8 +11267,8 @@ body.welcome-overlay-lock {
   .reference-ai-hero-copy p,
   .detail-page-shell .detail-description-clamped {
     max-width: none;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.55;
   }
 
   .featured-grid,
@@ -11208,6 +11297,19 @@ body.welcome-overlay-lock {
     display: block;
     margin: 0;
     min-width: 0;
+    overflow: hidden;
+    border-radius: 18px;
+  }
+
+  .feed-image {
+    aspect-ratio: 0.8;
+    overflow: hidden;
+  }
+
+  .feed-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .feed-content {
@@ -11223,15 +11325,23 @@ body.welcome-overlay-lock {
   .feed-card h3,
   .reference-ai-product-content strong,
   .page-grid .featured-content h3 {
-    font-size: 0.96rem;
-    line-height: 1.25;
+    font-size: 1rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .feed-content .muted-text,
   .reference-ai-product-content p,
   .page-grid .featured-content .muted-text {
-    font-size: 0.82rem;
+    font-size: 0.92rem;
     line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .feed-footer {
@@ -11245,8 +11355,46 @@ body.welcome-overlay-lock {
     gap: 12px;
   }
 
+  .reference-ai-search-bar,
+  .reference-ai-actions,
+  .reference-ai-filters-grid,
+  .reference-assistant-input,
+  .capsule-create-row,
+  .profile-request-footer,
+  .profile-reference-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .reference-ai-search-bar,
+  .reference-ai-actions,
+  .reference-assistant-input {
+    gap: 10px;
+  }
+
   .reference-ai-product-content {
     padding: 12px;
+  }
+
+  .reference-ai-product-card,
+  .reference-ai-product-content,
+  .reference-ai-product-image,
+  .reference-ai-bottom-bar,
+  .reference-assistant-bubble,
+  .messages-sidebar-item,
+  .messages-panel-item {
+    overflow: hidden;
+  }
+
+  .reference-ai-presets {
+    gap: 8px;
+  }
+
+  .reference-ai-preset,
+  .reference-ai-filter-btn {
+    padding: 10px 12px;
+    line-height: 1.25;
   }
 
   .reference-ai-capsule-foot,
@@ -11274,10 +11422,14 @@ body.welcome-overlay-lock {
 
   .reference-assistant-bubble {
     max-width: 92%;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
-  .reference-assistant-input {
-    flex-direction: column;
+  .reference-assistant-input textarea,
+  .reference-assistant-input input,
+  .capsule-create-row input {
+    width: 100%;
   }
 
   .profile-reference-cover {
@@ -11311,6 +11463,13 @@ body.welcome-overlay-lock {
     gap: 12px;
   }
 
+  .profile-reference-title-row p,
+  .profile-reference-supporting-text,
+  .profile-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
   .profile-reference-avatar {
     width: 72px;
     height: 72px;
@@ -11337,11 +11496,16 @@ body.welcome-overlay-lock {
     padding: 12px 10px;
   }
 
-  .capsule-create-row,
-  .profile-request-footer,
-  .profile-reference-actions {
-    flex-direction: column;
-    align-items: stretch;
+  .capsule-create-row .primary-btn,
+  .capsule-create-row .ghost-btn,
+  .profile-request-footer .primary-btn,
+  .profile-reference-actions .primary-btn,
+  .profile-reference-actions .ghost-btn,
+  .reference-ai-submit,
+  .reference-assistant-input .primary-btn,
+  .messages-compose .primary-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .messages-page-grid {
@@ -11364,15 +11528,17 @@ body.welcome-overlay-lock {
 
   .messages-compose {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
-  .messages-compose .primary-btn {
+  .messages-compose input,
+  .messages-compose textarea {
     width: 100%;
-    justify-content: center;
   }
 
   .detail-page-shell {
     padding: 10px;
+    overflow: hidden;
   }
 
   .detail-page-shell .detail-stage-tight {
@@ -11403,7 +11569,31 @@ body.welcome-overlay-lock {
     grid-template-columns: 52px minmax(0, 1fr);
   }
 
+  .detail-page-shell .detail-inline-list-compact,
+  .detail-page-shell .detail-link-row,
+  .detail-page-shell .detail-metadata-row {
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
   .detail-page-shell .detail-item-link {
     grid-column: 2;
+  }
+}
+
+@media (max-width: 420px) {
+  .topbar-inner {
+    width: min(calc(100vw - 20px), var(--container));
+    gap: 8px;
+  }
+
+  .brand-copy strong {
+    font-size: 0.94rem;
+  }
+
+  .nav-link {
+    padding: 6px 2px;
+    font-size: 0.64rem;
+    letter-spacing: -0.01em;
   }
 }
