@@ -687,6 +687,25 @@ export function ProfilePage() {
               </div>
             </div>
 
+            <div className="profile-mobile-role-switch" role="tablist" aria-label="Режим профиля">
+              <button
+                type="button"
+                className={`profile-mobile-role-btn ${isDesigner ? "active" : ""}`}
+                onClick={() => updateUser({ role: "designer" })}
+                aria-pressed={isDesigner}
+              >
+                Дизайнер
+              </button>
+              <button
+                type="button"
+                className={`profile-mobile-role-btn ${!isDesigner ? "active" : ""}`}
+                onClick={() => updateUser({ role: "client" })}
+                aria-pressed={!isDesigner}
+              >
+                Покупатель
+              </button>
+            </div>
+
             <div className="profile-reference-inline-stats">
               {stats.map((item) => (
                 <article key={item.label}>
