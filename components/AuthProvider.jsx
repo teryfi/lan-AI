@@ -1,23 +1,22 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { catalog, featuredCapsules, initialDesignerCapsules, initialMessages } from "@/lib/data";
 import { initialConversations } from "@/lib/messages-data";
 
 const AppContext = createContext(null);
 
 const defaultUser = {
-  name: "Новый пользователь",
+  name: "Гость",
   email: "",
-  role: "client",
-  avatar: "Н",
+  role: "designer",
+  avatar: "Г",
   privacy: "public",
-  authenticated: false
+  authenticated: true
 };
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(defaultUser);
-  const [authOpen, setAuthOpen] = useState(false);
   const [products, setProducts] = useState(catalog);
   const [savedCapsules, setSavedCapsules] = useState([]);
   const [savedItems, setSavedItems] = useState([]);
@@ -26,21 +25,6 @@ export function AuthProvider({ children }) {
   const [assistantMessages, setAssistantMessages] = useState([
     { role: "assistant", text: "Я стилист-помощник. Могу помочь собрать лук, подсказать замену вещи, подобрать обувь, палитру и объяснить, почему капсула работает." }
   ]);
-
-  useEffect(() => {
-    const raw = window.localStorage.getItem("lan-ai-user");
-    if (!raw) return;
-
-    try {
-      setUser(JSON.parse(raw));
-    } catch {
-      window.localStorage.removeItem("lan-ai-user");
-    }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem("lan-ai-user", JSON.stringify(user));
-  }, [user]);
 
   const metrics = useMemo(() => {
     const likes = products.reduce((sum, item) => sum + (item.likes || 120), 0);
@@ -51,7 +35,7 @@ export function AuthProvider({ children }) {
   }, [products]);
 
   const login = (payload) => {
-    const avatar = (payload.avatar || payload.name || "Н").trim().charAt(0).toUpperCase();
+    const avatar = (payload.avatar || payload.name || "Г").trim().charAt(0).toUpperCase();
     setUser({
       name: payload.name,
       email: payload.email,
@@ -60,7 +44,6 @@ export function AuthProvider({ children }) {
       privacy: payload.privacy || "public",
       authenticated: true
     });
-    setAuthOpen(false);
   };
 
   const logout = () => {
@@ -70,7 +53,7 @@ export function AuthProvider({ children }) {
   };
 
   const updateUser = (payload) => {
-    const avatar = (payload.name || payload.avatar || "Н").trim().charAt(0).toUpperCase();
+    const avatar = (payload.name || payload.avatar || "Г").trim().charAt(0).toUpperCase();
     setUser((prev) => ({
       ...prev,
       ...payload,
@@ -105,7 +88,6 @@ export function AuthProvider({ children }) {
       tags: tags?.length ? tags : [...new Set(safeItems.flatMap((item) => item.styles || []))].slice(0, 4)
     };
   };
-
 
   const addCapsule = (capsule) => {
     setSavedCapsules((prev) => [
@@ -226,11 +208,10 @@ export function AuthProvider({ children }) {
     setAssistantMessages((prev) => [...prev, { role: "user", text }, { role: "assistant", text: answer }]);
   };
 
-
   const value = {
     user,
-    authOpen,
-    setAuthOpen,
+    authOpen: false,
+    setAuthOpen: () => {},
     login,
     logout,
     updateUser,

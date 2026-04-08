@@ -802,8 +802,8 @@ html {
 }
 
 .reveal-block {
-  opacity: 0;
-  transform: translateY(34px) scale(0.985);
+  opacity: 1;
+  transform: none;
   transition: opacity 700ms ease, transform 700ms ease;
   transition-delay: var(--reveal-delay, 0ms);
 }
@@ -813,12 +813,17 @@ html {
   transform: translateY(0) scale(1);
 }
 
+html {
+  background: #f6f0e8;
+}
+
 body {
   position: relative;
   margin: 0;
   min-height: 100vh;
   color: var(--text);
   font-family: "Manrope", sans-serif;
+  background-color: #f6f0e8;
   background:
     linear-gradient(
       180deg,
@@ -1727,6 +1732,7 @@ button {
   overflow: hidden;
   border-radius: var(--radius-lg);
   transition: transform 180ms ease, box-shadow 180ms ease;
+  will-change: transform;
 }
 
 .featured-card:hover,
@@ -2448,6 +2454,38 @@ textarea {
   .page-shell,
   .topbar-inner {
     width: min(calc(100vw - 16px), var(--container));
+  }
+
+  .page-shell {
+    padding: 16px 0 40px;
+  }
+
+  .hero-actions,
+  .home-dark-actions,
+  .feed-head-actions,
+  .topbar-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions .primary-btn,
+  .hero-actions .ghost-btn,
+  .home-dark-primary,
+  .topbar-icon-link,
+  .feed-filter-choice,
+  .feed-filter-pill,
+  .feed-filter-row,
+  .toggle-chip {
+    min-height: 44px;
+  }
+
+  .featured-card,
+  .hero-editorial-card,
+  .content-section,
+  .steps-section,
+  .home-dark-block,
+  .home-dark-cta {
+    border-radius: 22px;
   }
 
   .feed-grid {
@@ -10322,6 +10360,37 @@ body.auth-modal-open .premium-hero-content {
   border: 2px solid rgba(244, 250, 255, 0.96);
 }
 
+.role-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #294157;
+  border: 1px solid rgba(196, 222, 246, 0.92);
+  box-shadow: 0 12px 28px rgba(107, 144, 184, 0.1);
+}
+
+.role-switch-btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.role-switch-btn:hover {
+  transform: translateY(-1px);
+}
+
+.role-switch-btn.active {
+  background: linear-gradient(135deg, rgba(44, 199, 192, 0.14), rgba(103, 150, 255, 0.2));
+  color: #17384f;
+}
+
 .messages-page-grid {
   padding-top: 28px;
 }
@@ -10726,6 +10795,16 @@ body.auth-modal-open .premium-hero-content {
   .messages-badge {
     justify-self: start;
   }
+
+  .role-switch {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .role-switch-btn {
+    flex: 1 1 0;
+    min-height: 44px;
+  }
 }
 
 .brand-mark {
@@ -10933,5 +11012,44 @@ body.welcome-overlay-lock {
   .welcome-overlay-cta {
     width: 100%;
     justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  body::before,
+  body::after {
+    display: none;
+  }
+
+  .topbar {
+    backdrop-filter: blur(10px);
+  }
+
+  .page-grid,
+  .featured-grid {
+    gap: 14px;
+  }
+
+  .page-grid .featured-card .featured-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .reveal-block {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

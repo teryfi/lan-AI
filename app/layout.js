@@ -3,11 +3,17 @@ import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/components/AuthProvider";
 import { BackgroundMotion } from "@/components/BackgroundMotion";
 import { SiteHeader } from "@/components/SiteHeader";
-import { AuthModal } from "@/components/AuthModal";
 
 export const metadata = {
   title: "Лань AI",
   description: "Платформа для дизайнеров одежды и AI-подбора гардеробных капсул."
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f6f0e8"
 };
 
 export default function RootLayout({ children }) {
@@ -19,7 +25,6 @@ export default function RootLayout({ children }) {
           <div className="app-shell">
             <SiteHeader />
             <main className="page-shell">{children}</main>
-            <AuthModal />
           </div>
           <Analytics />
         </AuthProvider>

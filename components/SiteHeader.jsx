@@ -9,7 +9,7 @@ import { useApp } from "@/components/AuthProvider";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { user, setAuthOpen, designerConversations = [] } = useApp();
+  const { user, setAuthOpen, updateUser, designerConversations = [] } = useApp();
   const isAuthLanding = pathname === "/" && !user.authenticated;
   const avatarLetter = (user.name || user.avatar || "Н").trim().charAt(0).toUpperCase();
   const unreadCount = designerConversations.reduce((sum, conversation) => sum + (conversation.unreadCount || 0), 0);
@@ -79,6 +79,24 @@ export function SiteHeader() {
             </nav>
 
             <div className="topbar-actions">
+              <div className="role-switch" role="tablist" aria-label="Режим профиля">
+                <button
+                  type="button"
+                  className={`role-switch-btn ${user.role === "designer" ? "active" : ""}`}
+                  onClick={() => updateUser({ role: "designer" })}
+                  aria-pressed={user.role === "designer"}
+                >
+                  Дизайнер
+                </button>
+                <button
+                  type="button"
+                  className={`role-switch-btn ${user.role === "client" ? "active" : ""}`}
+                  onClick={() => updateUser({ role: "client" })}
+                  aria-pressed={user.role === "client"}
+                >
+                  Покупатель
+                </button>
+              </div>
               {!user.authenticated ? (
                 <button className="ghost-btn" onClick={() => setAuthOpen(true)}>Войти</button>
               ) : (

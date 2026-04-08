@@ -374,7 +374,7 @@ export function AIPage() {
                 <div className="reference-ai-capsule-grid">
                   {capsule.items.map((item) => (
                     <div key={item.id} className="reference-ai-capsule-grid-item">
-                      <img src={item.image} alt={item.title} />
+                      <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
                     </div>
                   ))}
                 </div>
@@ -419,7 +419,7 @@ export function AIPage() {
                   className="reference-ai-product-card"
                 >
                   <div className="reference-ai-product-image">
-                    <img src={item.image} alt={item.title} />
+                    <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
                     <button onClick={() => toggleSave(item.id)}>
                       <Heart size={14} fill={savedItems.includes(item.id) ? "currentColor" : "none"} />
                     </button>
@@ -454,7 +454,7 @@ export function AIPage() {
             <div className="reference-ai-bottom-preview">
               {capsuleItems.slice(0, 4).map((item) => (
                 <div key={item.id} className="reference-ai-preview-item">
-                  <img src={item.image} alt={item.title} />
+                  <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
                   <button onClick={() => removeFromCapsule(item.id)}>
                     <X size={8} />
                   </button>

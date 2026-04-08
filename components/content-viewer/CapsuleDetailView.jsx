@@ -121,7 +121,7 @@ export function CapsuleDetailView() {
                       ariaLabel={`${ui.openItem} ${item.title}`}
                     >
                       <div className="detail-inline-thumb">
-                        <img src={item.image} alt={item.title} />
+                        <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
                       </div>
                       <div className="detail-inline-copy">
                         <strong>{item.title}</strong>

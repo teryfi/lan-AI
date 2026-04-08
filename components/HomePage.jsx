@@ -7,13 +7,12 @@ import { BarChart3, Bot, CircleDollarSign, MessageCircle, ShoppingBag, Sparkles 
 import { useApp } from "@/components/AuthProvider";
 import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 import { Reveal } from "@/components/Reveal";
-import { PremiumHero } from "@/components/PremiumHero";
-import { WelcomeOverlay } from "@/components/WelcomeOverlay";
 
 export function HomePage() {
   const router = useRouter();
-  const { user, setAuthOpen, featuredCapsules, authOpen, products } = useApp();
+  const { featuredCapsules, products } = useApp();
   const productById = useMemo(() => new Map(products.map((item) => [item.id, item])), [products]);
+  const heroCapsule = featuredCapsules[0] || null;
   const featureCards = [
     {
       icon: Bot,
@@ -47,20 +46,8 @@ export function HomePage() {
     },
   ];
 
-  if (!user.authenticated) {
-    return (
-      <>
-        <WelcomeOverlay />
-        <PremiumHero onStart={() => setAuthOpen(true)} authModalOpen={authOpen} />
-      </>
-    );
-  }
-
-
   return (
-    <>
-      <WelcomeOverlay />
-      <div className="page-grid">
+    <div className="page-grid">
       <Reveal>
         <section className="hero-section">
           <div className="hero-layout-container">
@@ -80,7 +67,13 @@ export function HomePage() {
                 </div>
               </div>
 
-              <article className="hero-editorial-card hero-editorial-card-compact">
+              <EntityCardLink
+                as="article"
+                className="hero-editorial-card hero-editorial-card-compact"
+                entity={heroCapsule}
+                entityType="capsule"
+                ariaLabel={heroCapsule ? `Открыть капсулу ${heroCapsule.name}` : "Открыть капсулу"}
+              >
                 <div className="hero-editorial-image" aria-hidden="true">
                   <div className="hero-capsule-grid">
                     <div className="hero-capsule-tile hero-capsule-tile-1"></div>
@@ -92,10 +85,10 @@ export function HomePage() {
                 </div>
                 <div className="hero-editorial-copy">
                   <span className="status-badge">AI Match 96%</span>
-                  <h2>Soft City Capsule</h2>
+                  <h2>{heroCapsule?.name || "Soft City Capsule"}</h2>
                   <p>Собрана под городской ритм, мягкую палитру и бюджет до 30 000 ₽.</p>
                 </div>
-              </article>
+              </EntityCardLink>
             </div>
           </div>
         </section>
@@ -314,6 +307,5 @@ export function HomePage() {
         </section>
       </Reveal>
       </div>
-    </>
   );
 }
