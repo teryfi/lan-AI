@@ -11290,6 +11290,8 @@ body.welcome-overlay-lock {
 
   .page-grid .hero-section {
     padding: 18px 16px 20px;
+    border: 0;
+    box-shadow: none;
   }
 
   .page-grid .hero-grid,
@@ -11308,8 +11310,9 @@ body.welcome-overlay-lock {
   .page-grid .hero-copy-wide h1,
   .page-grid .hero-copy h1 {
     max-width: 14ch;
+    width: min(100%, 330px);
     margin: 0 auto;
-    font-size: clamp(1.55rem, 6.8vw, 2rem);
+    font-size: clamp(1.7rem, 7.2vw, 2.2rem);
     line-height: 1;
     letter-spacing: -0.025em;
     text-wrap: pretty;
@@ -11347,6 +11350,8 @@ body.welcome-overlay-lock {
     min-height: auto;
     margin: 0 auto;
     width: min(100%, 320px);
+    border: 0;
+    box-shadow: 0 10px 24px rgba(120, 154, 201, 0.1);
   }
 
   .page-grid .hero-editorial-image {
@@ -11388,6 +11393,8 @@ body.welcome-overlay-lock {
     padding: 16px 14px;
     border-radius: 18px;
     text-align: center;
+    border: 0;
+    box-shadow: 0 10px 22px rgba(120, 154, 201, 0.08);
   }
 
   .page-grid .curation-item:last-child {
@@ -11412,6 +11419,8 @@ body.welcome-overlay-lock {
   .page-grid .home-dark-block,
   .page-grid .home-dark-cta {
     padding: 20px 16px;
+    border: 0;
+    box-shadow: none;
   }
 
   .page-grid .steps-head,
@@ -11427,7 +11436,7 @@ body.welcome-overlay-lock {
   .page-grid .story-lead h2,
   .page-grid .home-dark-head h2,
   .page-grid .home-dark-cta-inner h2 {
-    font-size: clamp(1.7rem, 8.3vw, 2.1rem);
+    font-size: clamp(1.55rem, 7.2vw, 1.95rem);
     line-height: 0.98;
     letter-spacing: -0.03em;
     text-wrap: balance;
@@ -11517,6 +11526,8 @@ body.welcome-overlay-lock {
     border-radius: 18px;
     min-width: 0;
     width: min(100%, 320px);
+    border: 0;
+    box-shadow: 0 10px 24px rgba(120, 154, 201, 0.1);
   }
 
   .page-grid .featured-capsule-preview {
@@ -11659,16 +11670,12 @@ body.welcome-overlay-lock {
   }
 
   .reference-ai-filters {
-    position: fixed;
-    left: 10px;
-    right: 10px;
-    top: 88px;
-    bottom: 10px;
-    z-index: 40;
+    position: relative;
     padding: 14px;
     border-radius: 22px;
     background: rgba(248, 252, 255, 0.98);
     box-shadow: 0 20px 44px rgba(30, 54, 88, 0.18);
+    max-height: min(68vh, 520px);
     overflow: auto;
   }
 
@@ -11698,6 +11705,11 @@ body.welcome-overlay-lock {
   .reference-ai-filters-note {
     font-size: 0.88rem;
     line-height: 1.45;
+  }
+
+  .reference-ai-search {
+    position: relative;
+    z-index: 2;
   }
 
   .reference-ai-capsule-card {
