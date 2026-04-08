@@ -6,8 +6,6 @@ import { useApp } from "@/components/AuthProvider";
 import { EntityCardLink } from "@/components/content-viewer/EntityCardLink";
 import { Reveal } from "@/components/Reveal";
 
-const heights = [280, 240, 320, 260, 300];
-
 const categoryOptions = [
   { value: "all", label: "Все категории" },
   { value: "outerwear", label: "Верхний слой" },
@@ -161,7 +159,7 @@ export function FeedPage() {
             </div>
 
             <div className="feed-grid">
-              {items.map((item, index) => (
+              {items.map((item) => (
                 <EntityCardLink
                   as="article"
                   className="feed-card"
@@ -170,13 +168,9 @@ export function FeedPage() {
                   entityType="item"
                   ariaLabel={`Открыть вещь ${item.title}`}
                 >
-                  <div
-                    className="feed-image"
-                    style={{
-                      "--preview": `url(${item.image})`,
-                      "--card-height": `${heights[index % heights.length]}px`
-                    }}
-                  ></div>
+                  <div className="feed-image">
+                    <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
+                  </div>
                   <div className="feed-content">
                     <span className="feed-tag">{item.categoryLabel}</span>
                     <div className="feed-title-row">

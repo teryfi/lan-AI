@@ -1924,7 +1924,17 @@ button {
 }
 
 .feed-image {
-  height: var(--card-height, 260px);
+  position: relative;
+  aspect-ratio: 0.78;
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .feed-tag {
@@ -11051,5 +11061,311 @@ body.welcome-overlay-lock {
   .reveal-block {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero-grid,
+  .hero-grid-balanced,
+  .feed-layout,
+  .profile-reference-header,
+  .detail-page-shell .detail-stage-item-focus,
+  .detail-page-shell .detail-stage-capsule-focus {
+    grid-template-columns: 1fr !important;
+  }
+
+  .feed-layout {
+    gap: 16px;
+  }
+
+  .filter-panel-curated {
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar-inner {
+    gap: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .topnav {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 8px;
+    padding-bottom: 4px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .topnav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link,
+  .ghost-btn,
+  .toggle-chip,
+  .profile-reference-tabs button,
+  .reference-ai-submit,
+  .reference-ai-filter-btn,
+  .reference-ai-product-content button,
+  .reference-ai-product-image button,
+  .reference-ai-capsule-foot button,
+  .reference-assistant-input button,
+  .messages-panel-item,
+  .messages-sidebar-item,
+  .profile-logout-button {
+    min-height: 44px;
+  }
+
+  .hero-section,
+  .content-section,
+  .steps-section,
+  .home-dark-block,
+  .home-dark-cta,
+  .profile-reference-shell,
+  .reference-ai-search,
+  .reference-assistant-panel,
+  .messages-sidebar,
+  .messages-stage,
+  .detail-page-shell {
+    border-radius: 20px;
+  }
+
+  .hero-copy h1,
+  .premium-hero-title,
+  .profile-reference-title-row h1,
+  .detail-page-shell .detail-title-single-line {
+    font-size: clamp(1.7rem, 7vw, 2.2rem);
+    white-space: normal;
+  }
+
+  .hero-text,
+  .profile-reference-copy p,
+  .reference-ai-hero-copy p,
+  .detail-page-shell .detail-description-clamped {
+    max-width: none;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .featured-grid,
+  .profile-card-grid,
+  .reference-ai-capsules {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .feed-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+
+  .feed-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-count: unset;
+    gap: 12px;
+  }
+
+  .feed-card {
+    display: block;
+    margin: 0;
+    min-width: 0;
+  }
+
+  .feed-content {
+    padding: 12px;
+  }
+
+  .feed-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .feed-card h3,
+  .reference-ai-product-content strong,
+  .page-grid .featured-content h3 {
+    font-size: 0.96rem;
+    line-height: 1.25;
+  }
+
+  .feed-content .muted-text,
+  .reference-ai-product-content p,
+  .page-grid .featured-content .muted-text {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .feed-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .reference-ai-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .reference-ai-product-content {
+    padding: 12px;
+  }
+
+  .reference-ai-capsule-foot,
+  .reference-ai-section-head,
+  .profile-content-head,
+  .profile-reference-header,
+  .detail-page-shell .detail-panel-head-inline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reference-ai-bottom-bar {
+    width: calc(100vw - 20px);
+    bottom: 10px;
+    padding: 12px 14px;
+    gap: 10px;
+    border-radius: 18px;
+    flex-wrap: wrap;
+  }
+
+  .reference-ai-bottom-actions,
+  .reference-ai-bottom-copy {
+    width: 100%;
+  }
+
+  .reference-assistant-bubble {
+    max-width: 92%;
+  }
+
+  .reference-assistant-input {
+    flex-direction: column;
+  }
+
+  .profile-reference-cover {
+    height: 156px;
+  }
+
+  .profile-reference-header,
+  .profile-reference-stats,
+  .profile-reference-tabs,
+  .profile-reference-content,
+  .profile-reference-footer-action {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .profile-reference-header {
+    margin-top: -34px;
+    padding-bottom: 16px;
+    gap: 14px;
+  }
+
+  .profile-reference-main {
+    align-items: center;
+    gap: 12px;
+  }
+
+  .profile-reference-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    font-size: 1.45rem;
+  }
+
+  .profile-reference-inline-stats {
+    width: 100%;
+    margin-left: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .profile-reference-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-reference-tabs button {
+    justify-content: center;
+    padding: 12px 10px;
+  }
+
+  .capsule-create-row,
+  .profile-request-footer,
+  .profile-reference-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .messages-page-grid {
+    padding-top: 16px;
+  }
+
+  .messages-workspace-shell {
+    gap: 12px;
+  }
+
+  .messages-sidebar,
+  .messages-stage {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .messages-thread {
+    max-height: min(52vh, 420px);
+  }
+
+  .messages-compose {
+    grid-template-columns: 1fr;
+  }
+
+  .messages-compose .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .detail-page-shell {
+    padding: 10px;
+  }
+
+  .detail-page-shell .detail-stage-tight {
+    padding: 12px;
+    gap: 14px;
+  }
+
+  .detail-page-shell .detail-main-image-compact,
+  .detail-page-shell .detail-gallery-compact {
+    max-height: 300px;
+    border-radius: 18px;
+  }
+
+  .detail-page-shell .detail-summary-row-capsule,
+  .detail-page-shell .detail-summary-row-item,
+  .detail-page-shell .detail-summary-row-item-swap {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-page-shell .detail-info-card,
+  .detail-page-shell .detail-panel-editorial,
+  .detail-page-shell .detail-panel-subtle {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .detail-page-shell .detail-inline-list-compact .detail-inline-item {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .detail-page-shell .detail-item-link {
+    grid-column: 2;
   }
 }

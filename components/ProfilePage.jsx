@@ -119,6 +119,16 @@ export function ProfilePage() {
   }, [searchParams, tabs]);
 
   useEffect(() => {
+    setActiveTab((currentTab) => {
+      if (tabs.some((tab) => tab.id === currentTab)) {
+        return currentTab;
+      }
+
+      return isDesigner ? "analytics" : "capsules";
+    });
+  }, [isDesigner, tabs]);
+
+  useEffect(() => {
     if (!contactContext || message.trim()) return;
 
     const prefix = contactContext.type === "capsule"
