@@ -74,7 +74,7 @@ export function FeedPage() {
     <div className="page-grid feed-page-grid">
       <div className="section-head compact-head">
         <div>
-          <h2>Новые вещи от дизайнеров</h2>
+          <h2>Новинки от дизайнеров</h2>
         </div>
         <div className="feed-head-actions">
           <button className={`toggle-chip ${sort === "smart" ? "active" : ""}`} onClick={() => setSort("smart")}>
@@ -141,8 +141,7 @@ export function FeedPage() {
             </div>
 
             <p className="muted-text">
-              Лента показывает вещи дизайнеров в более чистом формате: акцент на одежде, авторе и цене, без
-              визуального шума.
+              Лента показывает вещи дизайнеров в более чистом формате: акцент на одежде, авторе и цене.
             </p>
           </aside>
 
